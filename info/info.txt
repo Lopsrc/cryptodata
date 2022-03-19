@@ -33,17 +33,17 @@ Excample: cryptodata /media/user/database.txt -d --rf /home/data/input.txt --wf 
     -d / -e                  |    Second argument - action (-d - decryption, -e - encryption). 
                              |    The argument is required.  
 -------------------------------------------------------------------------------------------------
-    --rf                     |    Third argument  - read file for input text. The argument is not required.
-                             |    The argument is required.  \n";
+    --rf                     |    Third argument  - read file for input text. 
+                             |    The argument is not required.  \n";
 -------------------------------------------------------------------------------------------------
-/home/data/input.txt         |    Fourth argument - path for read input text. If third argument written,
-                             |    the argument is required.  
+/home/data/input.txt         |    Fourth argument - path for read input text. If third 
+                             |    argument written, the argument is required.  
 -------------------------------------------------------------------------------------------------
-    --wf                     |    Fifth argument  - write file for output text. The argument is not required.
-                             |    The argument is required.  
+    --wf                     |    Fifth argument  - write file for output text.
+                             |    The argument is not required.  
 -------------------------------------------------------------------------------------------------
-/home/data/output.txt        |    Sixth argument  - path for write output text. If fifth argument written,
-                             |    the argument is required.  
+/home/data/output.txt        |    Sixth argument  - path for write output text. If fifth 
+                             |    argument written, the argument is required.  
 -------------------------------------------------------------------------------------------------
         -h                   |    Seventh argument  - information command.
                              |   
