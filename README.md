@@ -1,1 +1,3 @@
-# cryptodata
+# Cryptodata
+
+Encryption and decryption data.
