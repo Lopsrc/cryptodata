@@ -1,0 +1,61 @@
+Purpose:
+
+-data encryption
+-data decryption
+
+Features:
+
+-using a database both written independently and with the help of a special generator in the utils folder
+-you can store the database on a USB stick together with the application or separately on a disk.
+-you can encrypt files or enter data from the command line.
+
+Using. Examples.
+
+    cryptodata database.txt -e --rf input.txt --wf output.txt
+    cryptodata database.txt -e --rf input.txt 
+    cryptodata database.txt -e --wf output.txt
+    cryptodata database.txt -e 
+
+Improper use:
+
+    cryptodata database.txt 
+    cryptodata
+
+--------------------------------------------------------------------------------------------------     
+2 parameters are required (database.txt - path to the database, -e - action).
+--------------------------------------------------------------------------------------------------
+Excample: cryptodata /media/user/database.txt -d --rf /home/data/input.txt --wf /home/data/output.txt
+
+---------------------------------------------------------------------------------------------------
+/media/user/database.txt     |    First argument  - path to database, if your not have database 
+                             |    file, create her. The argument is required.      
+--------------------------------------------------------------------------------------------------
+    -d / -e                  |    Second argument - action (-d - decryption, -e - encryption). 
+                             |    The argument is required.  
+---------------------------------------------------------------------------------------------------
+    --rf                     |    Third argument  - read file for input text. The argument is not required.
+                             |    The argument is required.  \n";
+---------------------------------------------------------------------------------------------------
+/home/data/input.txt         |    Fourth argument - path for read input text. If third argument written,
+                             |    the argument is required.  
+---------------------------------------------------------------------------------------------------
+    --wf                     |    Fifth argument  - write file for output text. The argument is not required.
+                             |    The argument is required.  
+---------------------------------------------------------------------------------------------------
+/home/data/output.txt        |    Sixth argument  - path for write output text. If fifth argument written,
+                             |    the argument is required.  
+--------------------------------------------------------------------------------------------------------------
+        -h                   |    Seventh argument  - information command.
+                             |   
+--------------------------------------------------------------------------------------------------------------
+
+Database generate.
+    ./generator database1.txt
+
+Random values are generated for the cipher of the first (475 characters) and second (180 characters) levels.
+
+Compile:
+	
+	g++ main.cpp -o cryptodata		(/code)
+	g++ main.cpp -o generator 		(/code/utils)
+
