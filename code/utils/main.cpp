@@ -1,9 +1,9 @@
 #include "headers.h"
 void printh()
 {
-    std::cout << "                          Welcome to cdutils: " << "\n";
+    std::cout << "\n";
     std::cout << "---------------------------------------------------------------------------------------------------\n";
-    std::cout << "Excample: " << "\n\t" << "cdutils /media/user/database.txt " << "\n";
+    std::cout << "Excample: " << "\n\t" << "generator /media/user/database.txt " << "\n";
     std::cout << "                                \n";
     std::cout << "---------------------------------------------------------------------------------------------------\n";
     std::cout << "  /media/user/database.txt     |    First argument  - path to database. The argument is required" << "\n";
