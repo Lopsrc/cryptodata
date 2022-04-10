@@ -11,10 +11,7 @@ int manage()        //function for manage application
     else if(ST::enter_wk == false)
         read_txt();                     //reading text from a file
     if (ST::action_c==1)
-    {    
-        std::cout << data::input_text << "\n";
         encryption();                   //encryption first level
-    }
     else if (ST::action_c==2)
         decryption();                   //decryption first level
     if (ST::enter_it == false)
@@ -22,7 +19,7 @@ int manage()        //function for manage application
     
     else if (ST::enter_it == true)
     {
-        std::cout << "Output text: \n";
+        std::cout << "Output text: ";
         printv();
     }
     return 0;
