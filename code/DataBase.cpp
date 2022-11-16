@@ -9,8 +9,7 @@ int write_to_cache(std::string& path)   //write data to global variable
     char            buff6[60];          //
     char            buff7[60];          //
     std::ifstream   fin;                // create stream for reading data from a file.
-    //fin.exceptions(std::ifstream::badbit | std::ifstream::failbit); //for correct exception handling.
-    fin.open(path);             //open file
+    fin.open(path);                     //open file
     if(fin.is_open())
     {
         
@@ -24,102 +23,53 @@ int write_to_cache(std::string& path)   //write data to global variable
         fin.close();
     
     }
-    else//(const std::exception& e)
+    else
     {
         std::cout << ". File opening error, check the correct path. [Read database]" << '\n';
         exit(1);
     }
-    int  k = 0;
-    for (size_t j = 0; j < 26; j++)
+    for (size_t j = 0, k = 0, p = 0; j < 33; j++)
     {
-        for (size_t i = 0; i < 5; i++)
+        for (size_t i = 0; i < 5; i++, k++)
         {
-            data::english_crypto[j][i]=buff[k];             //write to global data
-            k++;
-        }
-    }
-    k = 0;
-    for (size_t j = 0; j < 26; j++)
-    {
-        for (size_t i = 0; i < 5; i++)
-        {
-            data::english_crypto_up[j][i]=buff2[k];          //write to global data
-            k++;
-        }
-    }
-    k = 0;
-    for (size_t j = 0; j < 33; j++)
-    {
-        for (size_t i = 0; i < 5; i++)
-        {
-            data::symbols_crypto[j][i]=buff3[k];             //write to global data
-            k++;
-        }
-    }
-    k = 0;
-    for (size_t j = 0; j < 10; j++)
-    {
-        for (size_t i = 0; i < 5; i++)
-        {
-            data::digitals_crypto[j][i]=buff4[k];             //write to global data
-            k++;
-        }
-    }
-    k = 0;
-    for (size_t i = 0; i < 10; i++)
-    {
-        for (size_t j = 0; j < 3; j++)
-        {
-            for (size_t l = 0; l < 2; l++)
+            if (j < 10) {data::digitals_crypto[j][i]=buff4[k];}
+            if (j < 26)
             {
-                data::fst_[i][j][l] = buff5[k];              //write to global data
-                k++;
+                data::english_crypto[j][i]=buff[k];             //write to global data
+                data::english_crypto_up[j][i]=buff2[k]; 
             }
+            if(j < 33)  {data::symbols_crypto[j][i]=buff3[k]; }
         }
-    }
-    k = 0;
-    for (size_t i = 0; i < 10; i++)
-    {
-        for (size_t j = 0; j < 3; j++)
+        if (j < 10)
         {
-            for (size_t l = 0; l < 2; l++)
+            for (size_t i = 0; i < 3; i++)
             {
-                data::snd_[i][j][l] = buff5[k];              //write to global data
-                k++;
-            }
-        }
-    }
-    k = 0;
-    for (size_t i = 0; i < 10; i++)
-    {
-        for (size_t j = 0; j < 3; j++)
-        {
-            for (size_t l = 0; l < 2; l++)
-            {
-                data::thrd_[i][j][l] = buff5[k];             //write to global data
-                k++;
+                for (size_t l = 0; l < 2; l++, p++)
+                {
+                    data::fst_[j][i][l]  = buff5[p];              //write to global data
+                    data::snd_[j][i][l]  = buff6[p];
+                    data::thrd_[j][i][l] = buff7[p];
+                }
             }
         }
     }
     return 0;
 }
-int read_txt()                          //read data from a file
+int read_txt()                      //read data from a file
 {
-    std::string         txt;      //       local variables
-    std::string         txt2;     //  for storing temporary values.
-    std::ifstream       fin;      // create stream for reading data from a file.     
-    //fin.exceptions(std::ifstream::badbit | std::ifstream::failbit); //for correct exception handling.
+    std::string         txt;        //       local variables
+    std::string         txt2;       //  for storing temporary values.
+    std::ifstream       fin;        // create stream for reading data from a file.     
     fin.open(PTHS::PATHR);          //open file
     if(fin.is_open())
     {
-        
-        if (ST::action_c==1)            //for encryption
+        if (ST::action_c==1)        //for encryption
         {
             while (!(fin.eof()))
             {
-                std::getline(fin, txt2);    //get value
-                data::input_text+=txt2;     //write data from a file
-                data::input_text+=data::keyw; //add keyword
+                std::getline(fin, txt2);        //get value
+                data::input_text+=txt2;         //write data from a file
+                data::input_text+=data::keyw;   //add keyword
             }
         }
         if (ST::action_c==2)            //for encryption
@@ -132,7 +82,7 @@ int read_txt()                          //read data from a file
         }
         fin.close();                    
     }
-    else //(const std::exception& e)
+    else 
     {
         std::cout << ". File opening error, check the correct path.[Read text]" << '\n';
         exit(1);
@@ -142,12 +92,10 @@ int read_txt()                          //read data from a file
 int write_txt()                         //write data to file
 {
     int            size  =  strleny(data::text2);   
-    std::ofstream  fout;    // create stream for write data to file. 
-    //fout.exceptions(std::ifstream::badbit | std::ifstream::failbit);
+    std::ofstream  fout;                // create stream for write data to file. 
     fout.open(PTHS::PATHW);
     if(fout.is_open())
     {
-        
         for (size_t i = 0; i < size; i++)
         {
             if (data::text2[i]==data::keyw[0])
@@ -169,7 +117,7 @@ int write_txt()                         //write data to file
         }
         fout.close();
     }
-    else//(const std::exception& e)
+    else
     {
         std::cout << ". File opening error, check the correct path.[Output text]" << '\n';
         exit(1);
