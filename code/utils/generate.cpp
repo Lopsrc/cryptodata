@@ -1,4 +1,4 @@
-namespace data
+namespace Alphabets
 {
     const char          symbols[96]        =  "a b.c:d,e@f!g?h;i\"j'k(l)m<n>o-p[q]r{s}t#u$v^w&x+y/zA\\B|C=D~E_F*G`H0I1J2K3L4M5N6O7P8Q9%RSTUVWXYZ";
     const static int    eng                =  26;
@@ -14,14 +14,14 @@ namespace data
     int                 buff4[dig];                     //
     int                 gen_tmp;                        //variable for generate first level
     std::vector<int>    ar;                             //storage buffer 
-    std::string         path;                           //path for data base
+    std::string         path;                           //path for Alphabets base
 };
 bool check(int& size)
 {
     unsigned i = 0;
     while (i<size)
     {
-        if (data::ar[i]==data::gen_tmp)         //equality check
+        if (Alphabets::ar[i]==Alphabets::gen_tmp)         //equality check
             return false;
         i++;
     }
@@ -36,18 +36,18 @@ int generator_frst()
     while (i < quantity)
     {
         const int min = 10000, max = 99999;         //range numbers
-        size = data::ar.size(); 
+        size = Alphabets::ar.size(); 
         START:
-        data::gen_tmp = min + rand() % (max - min); //generate random number
-        if (data::ar.empty())                       
+        Alphabets::gen_tmp = min + rand() % (max - min); //generate random number
+        if (Alphabets::ar.empty())                       
         {
-            data::ar.push_back(data::gen_tmp);      
+            Alphabets::ar.push_back(Alphabets::gen_tmp);      
             i++;
             continue;
         }
         else if (check(size))                            //true - not equal
         {
-            data::ar.push_back(data::gen_tmp);
+            Alphabets::ar.push_back(Alphabets::gen_tmp);
         }
         else
             goto START;
@@ -60,7 +60,7 @@ int strleny()
     int counter = 0;
     while (true)
     {
-        if (data::ar_check[counter][0]==100)
+        if (Alphabets::ar_check[counter][0]==100)
             break;
         counter++;
     }
@@ -71,14 +71,14 @@ bool check(int& v1, int& v2)
     int counter = 0;
     for (size_t i = 0; i < strleny(); i++)
     {
-        if (data::buffer_frst[i][0]==v1)
+        if (Alphabets::buffer_frst[i][0]==v1)
         {
-            if (data::buffer_frst[i][1]==v2)    //equality check
+            if (Alphabets::buffer_frst[i][1]==v2)    //equality check
                 return false;
         }
         if (i == strleny()-1)
         {
-            data::ar_check[i][0] == 100;        //keyword adding (for counting numbers)
+            Alphabets::ar_check[i][0] == 100;        //keyword adding (for counting numbers)
             return true;
         }
         
@@ -100,18 +100,18 @@ int generator_scnd()
         gen_tmp2 = rand() % 95;
         if (k==0)
         {
-            data::buffer_frst[i][0] = data::symbols[gen_tmp];
-            data::buffer_frst[i][1] = data::symbols[gen_tmp2];
-            data::ar_check[k][0]    = gen_tmp;                      //adding numbers
-            data::ar_check[k][1]    = gen_tmp2;                     //
-            data::ar_check[i+1][0]  = 100;                          //keyword adding (for counting numbers)
+            Alphabets::buffer_frst[i][0] = Alphabets::symbols[gen_tmp];
+            Alphabets::buffer_frst[i][1] = Alphabets::symbols[gen_tmp2];
+            Alphabets::ar_check[k][0]    = gen_tmp;                      //adding numbers
+            Alphabets::ar_check[k][1]    = gen_tmp2;                     //
+            Alphabets::ar_check[i+1][0]  = 100;                          //keyword adding (for counting numbers)
             k++;
             continue; 
         }
         else if (check(gen_tmp, gen_tmp2))                               //true - not equal
         {
-            data::buffer_frst[i][0] = data::symbols[gen_tmp];
-            data::buffer_frst[i][1] = data::symbols[gen_tmp2];
+            Alphabets::buffer_frst[i][0] = Alphabets::symbols[gen_tmp];
+            Alphabets::buffer_frst[i][1] = Alphabets::symbols[gen_tmp2];
             k++;
         }
         else
@@ -124,18 +124,18 @@ int generator_scnd()
         gen_tmp2 = rand() % 95;
         if (i==0)
         {
-            data::buffer_scnd[i][0] = data::symbols[gen_tmp];
-            data::buffer_scnd[i][1] = data::symbols[gen_tmp2];
-            data::ar_check[k][0]    = gen_tmp;
-            data::ar_check[k][1]    = gen_tmp2;
-            data::ar_check[i+1][0]  = 100;
+            Alphabets::buffer_scnd[i][0] = Alphabets::symbols[gen_tmp];
+            Alphabets::buffer_scnd[i][1] = Alphabets::symbols[gen_tmp2];
+            Alphabets::ar_check[k][0]    = gen_tmp;
+            Alphabets::ar_check[k][1]    = gen_tmp2;
+            Alphabets::ar_check[i+1][0]  = 100;
             k++;
             continue; 
         }
         else if (check(gen_tmp, gen_tmp2))
         {
-            data::buffer_scnd[i][0] = data::symbols[gen_tmp];
-            data::buffer_scnd[i][1] = data::symbols[gen_tmp2];
+            Alphabets::buffer_scnd[i][0] = Alphabets::symbols[gen_tmp];
+            Alphabets::buffer_scnd[i][1] = Alphabets::symbols[gen_tmp2];
             k++;
         }
         else
@@ -150,18 +150,18 @@ int generator_scnd()
         gen_tmp2 = rand() % 95;
         if (i==0)
         {
-            data::buffer_thrd[i][0] = data::symbols[gen_tmp];
-            data::buffer_thrd[i][1] = data::symbols[gen_tmp2];
-            data::ar_check[k][0]    = gen_tmp;
-            data::ar_check[k][1]    = gen_tmp2;
-            data::ar_check[i+1][0]  = 100;
+            Alphabets::buffer_thrd[i][0] = Alphabets::symbols[gen_tmp];
+            Alphabets::buffer_thrd[i][1] = Alphabets::symbols[gen_tmp2];
+            Alphabets::ar_check[k][0]    = gen_tmp;
+            Alphabets::ar_check[k][1]    = gen_tmp2;
+            Alphabets::ar_check[i+1][0]  = 100;
             k++;
             continue; 
         }
         else if (check(gen_tmp, gen_tmp2))
         {
-            data::buffer_thrd[i][0] = data::symbols[gen_tmp];
-            data::buffer_thrd[i][1] = data::symbols[gen_tmp2];
+            Alphabets::buffer_thrd[i][0] = Alphabets::symbols[gen_tmp];
+            Alphabets::buffer_thrd[i][1] = Alphabets::symbols[gen_tmp2];
             k++;
         }
         else

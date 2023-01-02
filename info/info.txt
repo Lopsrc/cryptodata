@@ -1,33 +1,33 @@
 Purpose:
 
--data encryption
--data decryption
+-Alphabets encryption
+-Alphabets decryption
 
 Features:
 
--using a database both written independently and with the help of a special generator in the utils folder
--you can store the database on a USB stick together with the application or separately on a disk.
--you can encrypt files or enter data from the command line.
+-using a Alphabetsbase both written independently and with the help of a special generator in the utils folder
+-you can store the Alphabetsbase on a USB stick together with the application or separately on a disk.
+-you can encrypt files or enter Alphabets from the command line.
 
 Using. Examples.
 
-    cryptodata database.txt -e --rf input.txt --wf output.txt
-    cryptodata database.txt -e --rf input.txt 
-    cryptodata database.txt -e --wf output.txt
-    cryptodata database.txt -e 
+    cryptoAlphabets Alphabetsbase.txt -e --rf input.txt --wf output.txt
+    cryptoAlphabets Alphabetsbase.txt -e --rf input.txt 
+    cryptoAlphabets Alphabetsbase.txt -e --wf output.txt
+    cryptoAlphabets Alphabetsbase.txt -e 
 
 Improper use:
 
-    cryptodata database.txt 
-    cryptodata
+    cryptoAlphabets Alphabetsbase.txt 
+    cryptoAlphabets
 
 --------------------------------------------------------------------------------------------------     
-2 parameters are required (database.txt - path to the database, -e - action).
+2 parameters are required (Alphabetsbase.txt - path to the Alphabetsbase, -e - action).
 --------------------------------------------------------------------------------------------------
-Excample: cryptodata /media/user/database.txt -d --rf /home/data/input.txt --wf /home/data/output.txt
+Excample: cryptoAlphabets /media/user/Alphabetsbase.txt -d --rf /home/Alphabets/input.txt --wf /home/Alphabets/output.txt
 
 -------------------------------------------------------------------------------------------------
-/media/user/database.txt     |    First argument  - path to database, if your not have database 
+/media/user/Alphabetsbase.txt     |    First argument  - path to Alphabetsbase, if your not have Alphabetsbase 
                              |    file, create her. The argument is required.      
 -------------------------------------------------------------------------------------------------
     -d / -e                  |    Second argument - action (-d - decryption, -e - encryption). 
@@ -36,26 +36,26 @@ Excample: cryptodata /media/user/database.txt -d --rf /home/data/input.txt --wf 
     --rf                     |    Third argument  - read file for input text. 
                              |    The argument is not required.  \n";
 -------------------------------------------------------------------------------------------------
-/home/data/input.txt         |    Fourth argument - path for read input text. If third 
+/home/Alphabets/input.txt         |    Fourth argument - path for read input text. If third 
                              |    argument written, the argument is required.  
 -------------------------------------------------------------------------------------------------
     --wf                     |    Fifth argument  - write file for output text.
                              |    The argument is not required.  
 -------------------------------------------------------------------------------------------------
-/home/data/output.txt        |    Sixth argument  - path for write output text. If fifth 
+/home/Alphabets/output.txt        |    Sixth argument  - path for write output text. If fifth 
                              |    argument written, the argument is required.  
 -------------------------------------------------------------------------------------------------
         -h                   |    Seventh argument  - information command.
                              |   
 -------------------------------------------------------------------------------------------------
 
-Database generate.
-    ./generator database1.txt
+Alphabetsbase generate.
+    ./generator Alphabetsbase1.txt
 
 Random values are generated for the cipher of the first (475 characters) and second (180 characters) levels.
 
 Compile:
 	
-	g++ main.cpp -o cryptodata		(/code)
+	g++ main.cpp -o cryptoAlphabets		(/code)
 	g++ main.cpp -o generator 		(/code/utils)
 
