@@ -39,10 +39,10 @@ namespace Alphabets                          //storage Alphabets
 
     
 
-    std::string         text;           //for load crypto text.
-    std::string         text2;          //
+    // std::string         text;           //for load crypto text.
+    // std::string         text2;          //
 
-    std::string         input_text;     //input text.
+    // std::string         input_text;     //input text.
     const std::string   keyw = "_N0_";  //line separator.
 };
 unsigned int strleny(std::string& str)  // calculating the length of an array.
@@ -51,21 +51,4 @@ unsigned int strleny(std::string& str)  // calculating the length of an array.
     while(str[counter]!='\0'){counter++;}
     return counter;
 }
-void printv()                           //output text in terminal
-{
-    int size = strleny(Alphabets::text2);
-    for (size_t i = 0; i < size; i++)
-    {
-        if (Alphabets::text2[i]==Alphabets::keyw[0])
-            if (Alphabets::text2[i+1]==Alphabets::keyw[1])
-                if (Alphabets::text2[i+2]==Alphabets::keyw[2])
-                    if (Alphabets::text2[i+3]==Alphabets::keyw[3])      //keyword checking
-                    {
-                        std::cout << "\n";
-                        i+=3;
-                        continue;
-                    }
-        std::cout << Alphabets::text2[i];
-    }
-    std::cout << "\n";
-}
+// 
