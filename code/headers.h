@@ -7,7 +7,8 @@
 #include <limits>
 #include <iterator>
 
-#include "Global_var.cpp"
-#include "DataBase.cpp"
+#include "Storage.cpp"
+#include "Writer.cpp"
 #include "Algorithm.cpp"
 #include "HelpInfo.cpp"
+#include "Controller.cpp"

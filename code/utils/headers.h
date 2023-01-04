@@ -6,4 +6,9 @@
 #include <iterator>
 #include <fstream>
 #include <string>
-#include "generate.cpp"
+
+#include "Storage.cpp"
+#include "Utilities.cpp"
+#include "Generate.cpp"
+#include "HelpInfo.cpp"
+#include "Writer.cpp"

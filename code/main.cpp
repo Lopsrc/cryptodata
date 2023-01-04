@@ -1,52 +1,12 @@
 #include "headers.h"
 
-int manage(std::string path)        //function for manage application
-{
-    std::string inputText;
-    std::string outputText;
-    Cryptography cryptography;
-    cryptography.write_to_cache(path);
-    if(ST::enter_wk==true)
-    {
-        std::cout << "Enter text: ";
-        std::getline(std::cin, inputText);   //entering text using the keyboard  
-        cryptography.Setter(&inputText);
+//Проверить в readfile корректность записи данных или работа с классами
 
-    }
-    else if(ST::enter_wk == false){
-        inputText = read_txt();                     //reading text from a file
-        cryptography.Setter(&inputText);
-    }
-    std::cout << cryptography.GetterIT() << std::endl;
-    if      (ST::action_c==1)   {cryptography.encryption();}                   //encryption first level
-    else if (ST::action_c==2)   {cryptography.decryption();}                   //decryption first level
-    std::cout << cryptography.GetterOT() << std::endl;
-    if (ST::enter_it == false)
-    {
-        outputText = cryptography.GetterOT();
-        write_txt(outputText);                    //writing Alphabets to a file
-    }
-    else if (ST::enter_it == true)      //print in terminal
-    {
-        std::cout << "Output text:\n" << "Begin\n\n";
-        printv(outputText);
-        std::cout <<  "\nEnd\n";
-    }
-    return 0;
-}
 
-// int main(){
-//     std::string path = "/home/serpc/project/cpp/cryptodata/code/utils/database.db";
-//     Cryptography a("=D7.KLG>/{?!P\"KL^5xUOg W^SPBxU");
-//     // Cryptography a("aaa");
-//     std::cout << a.GetterIT() << std::endl;
-//     a.write_to_cache(path);
-//     a.decryption();
-//     // a.encryption();
-//     std::cout << a.GetterOT() << std::endl;
-// }
+
 int main(int argc, char** argv)
 {
+    std::cout << argc << std::endl;
     std::srand(time(NULL));
     if (argc==1)        //check input arguments
     {
@@ -75,34 +35,42 @@ int main(int argc, char** argv)
         
         if (argc == 5)
         {
+            std::cout << 0001 << std::endl;
             if((std::string(argv[3])=="--wf"))
             {   
                 PTHS::PATHW = std::string(argv[4]);     //path for writing a Alphabets from file
-                ST::enter_it = false;
+                ST::enter_it = 1;
             }
             if((std::string(argv[3])=="--rf"))
             {   
                 PTHS::PATHR = std::string(argv[4]);     //path for reading a Alphabets from file
-                ST::enter_wk = false;
+                ST::enter_wk = 1;
             }
             
         }
         else if (argc == 7)
         {
+            std::cout << "seven" << std::endl;
+            
+            if((std::string(argv[3])=="-rf")||(std::string(argv[5])=="-wf"))
+            {   
+                std::cout << "Неккоректный флаг --rf  или --wf" << std::endl;
+            }
             if((std::string(argv[3])=="--rf"))
             {   
+                std::cout << "rf" << std::endl;
                 PTHS::PATHR = std::string(argv[4]);     //path for reading a Alphabets from file
-                ST::enter_wk = false;
+                ST::enter_wk = 1;
             }
             if(std::string(argv[5])=="--wf")
             {
+                std::cout << "wf" << std::endl;
                 PTHS::PATHW = std::string(argv[6]);     //path for write Alphabets to file
-                ST::enter_it = false;
+                ST::enter_it = 1;
             }
         }
         
-
-        return manage(std::string(argv[1]));
+        return Controller(std::string(argv[1]));
     }
     return 1;
 }

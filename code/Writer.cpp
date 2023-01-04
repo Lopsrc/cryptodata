@@ -36,11 +36,9 @@ std::string read_txt()                      //read Alphabets from a file
     return 0;
 }
 
-
-
 int write_txt(std::string& outputText)                         //write Alphabets to file
 {
-    int            size  =  strleny(outputText);   
+    int            size  =  outputText.length();   
     std::ofstream  fout;                // create stream for write Alphabets to file. 
     fout.open(PTHS::PATHW);
     if(fout.is_open())
