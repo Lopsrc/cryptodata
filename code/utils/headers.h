@@ -8,7 +8,7 @@
 #include <string>
 
 #include "Storage.cpp"
-#include "Utilities.cpp"
 #include "Generate.cpp"
 #include "HelpInfo.cpp"
 #include "Writer.cpp"
+#include "Controller.cpp"

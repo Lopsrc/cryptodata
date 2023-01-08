@@ -1,5 +1,5 @@
 
-//Реализовать запись данных в кеш в виде класса WriteToCache
+//проверить алгоритмы расшифровки. или нет. сначала шифровки, может проблема в этом, некорректное шифрование привело к некорректной расшифровки, хотя size  одинаков
 
 class Cryptography{
 protected:
@@ -21,6 +21,7 @@ protected:
     char                symbols_crypto[Alphabets::var_sym][Alphabets::var_col];       //
 
     void checkcrypto(){
+        std::cout << "\ncryptoshifr 1 lvl " << std::endl;
         for (size_t i = 0; i < Alphabets::var_d1th; i++)
         {
             for (size_t j = 0; j < Alphabets::var_2th; j++)
@@ -31,6 +32,7 @@ protected:
                 }
             }
         }
+        std::cout << "\ncryptoshifr 2 lvl " << std::endl;
         for (size_t i = 0; i < Alphabets::var_d1th; i++)
         {
             for (size_t j = 0; j < Alphabets::var_2th; j++)
@@ -41,6 +43,7 @@ protected:
                 }
             }
         }
+        std::cout << "\ncryptoshifr 3 lvl " << std::endl;
         for (size_t i = 0; i < Alphabets::var_d1th; i++)
         {
             for (size_t j = 0; j < Alphabets::var_2th; j++)
@@ -51,7 +54,7 @@ protected:
                 }
             }
         }
-        std::cout << "eng" << std::endl;
+        std::cout << "\neng" << std::endl;
         for (size_t i = 0; i < Alphabets::var_eng; i++)
         {
             for (size_t j = 0; j < Alphabets::var_col; j++)
@@ -59,7 +62,7 @@ protected:
                 std::cout << english_crypto[i][j];
             }
         }
-        std::cout << "eng_up" << std::endl;
+        std::cout << "\neng_up" << std::endl;
         for (size_t i = 0; i < Alphabets::var_eng; i++)
         {
             for (size_t j = 0; j < Alphabets::var_col; j++)
@@ -67,7 +70,7 @@ protected:
                 std::cout << english_crypto_up[i][j];
             }
         }
-        std::cout << "symbols" << std::endl;
+        std::cout << "\nsymbols" << std::endl;
 
         for (size_t i = 0; i < Alphabets::var_sym; i++)
         {
@@ -76,7 +79,7 @@ protected:
                 std::cout << symbols_crypto[i][j];
             }
         }
-        std::cout << "digitals" << std::endl;
+        std::cout << "\ndigitals" << std::endl;
         for (size_t i = 0; i < Alphabets::var_d1th; i++)
         {
             for (size_t j = 0; j < Alphabets::var_col; j++)
@@ -96,6 +99,8 @@ public:
     Cryptography(){}
 
     bool checkSum(){
+        std::cout << "size inputtext = " << inputText.length() << std::endl;
+        std::cout << "size outputtext = " << outputText.length() << std::endl;
         if(ST::action_c == 1){
             if (inputText.length() != outputText.length()/10) {return false;}
         }
@@ -159,6 +164,7 @@ public:
             }
         }
         std::cout << "write to cache" << std::endl;
+        checkcrypto();
         return 0;
     }
 
@@ -308,6 +314,7 @@ private:
                 }
             }
         }
+        std::cout << "outputText = " << outputText << std::endl;
         return 0;
     }
 
@@ -317,8 +324,9 @@ public:
         // int   size  =  strleny(inputText);
         //search values
         size = inputText.length();
-        // std::cout << "begin decryption" << std::endl;
-        // std::cout << "size = " << size << std::endl;
+        std::cout << "begin buffer" << bufferClipboard << std::endl;
+        std::cout << "size = " << size << std::endl;
+        // bool flagFindStatus = false;
         for (size_t y = 0; y < size; y+=2)
         { 
             for (size_t i = 0; i < 10; i++)
@@ -329,33 +337,47 @@ public:
                     {
                         if (inputText[y+1]==fst_[i][k][1])
                         {
+                            std::cout << "first shifr ";
                             bufferClipboard += Alphabets::digitals[i]; 
-                            i++;
+                            std::cout << bufferClipboard << std::endl;
+                            // i++;
+                            // flagFindStatus = true;
                             break;
-                        } 
+                        }
                     }
+            
                     if(inputText[y]==snd_[i][k][0])
                     {
                         if (inputText[y+1]==snd_[i][k][1])
                         {
+                            std::cout << "second shifr ";
                             bufferClipboard += Alphabets::digitals[i]; 
-                            i++;
+                            // i++;
+                            // flagFindStatus = true;
                             break;
                         } 
                     }
+                    
                     if(inputText[y]==thrd_[i][k][0])
                     {
                         if (inputText[y+1]==thrd_[i][k][1])
                         {
+                            std::cout << "third shifr ";
                             bufferClipboard += Alphabets::digitals[i]; 
-                            i++;
+                            // i++;
+                            // flagFindStatus = true;
                             break;
                         } 
                     }
+                    
                 }
             }
+            
+            
+            // std::cout << bufferClipboard << std::endl;
         }
-        // std::cout << bufferClipboard << std::endl;
+        std::cout << "bufferClipboard = " << bufferClipboard << std::endl;
+        std::cout << "size bufferClipboard = " << bufferClipboard.length() << std::endl;
         decryptionSecondLevel();       //decryption second level
         return 0;
     }

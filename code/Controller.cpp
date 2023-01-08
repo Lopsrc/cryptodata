@@ -7,6 +7,7 @@ int Controller(std::string path)        //function for manage application
     std::string outputText;
     CryptographyEnglish cryptography;
     cryptography.write_to_cache(path);
+
     if(ST::enter_wk==2)
     {
         std::cout << "Enter text: ";
@@ -16,6 +17,7 @@ int Controller(std::string path)        //function for manage application
     }
     else if(ST::enter_wk == 1){
         inputText = read_txt();                     //reading text from a file
+        std::cout << "inputtext = " << inputText << std::endl;
         cryptography.Setter(&inputText);
     }
     // std::cout << cryptography.GetterIT() << std::endl;

@@ -3,7 +3,7 @@ std::string read_txt()                      //read Alphabets from a file
 {
     std::string         inputText;        //       local variables
     std::string         txt2;       //  for storing temporary values.
-
+    std::cout << "begin readtext" << std::endl;
     std::ifstream       fin;        // create stream for reading Alphabets from a file.     
     fin.open(PTHS::PATHR);          //open file
     if(fin.is_open())
@@ -13,9 +13,9 @@ std::string read_txt()                      //read Alphabets from a file
             while (!(fin.eof()))
             {
                 std::getline(fin, txt2);        //get value
-                inputText = txt2 + Alphabets::keyw;         //write Alphabets from a file
+                inputText += txt2 ;         //write Alphabets from a file
 
-                //Alphabets::input_text += Alphabets::keyw;   //add keyword
+                inputText += Alphabets::keyw;   //add keyword
             }
         }
         if (ST::action_c==2)            //for encryption
@@ -33,11 +33,13 @@ std::string read_txt()                      //read Alphabets from a file
         std::cout << ". File opening error, check the correct path.[Read text]" << '\n';
         exit(1);
     }
-    return 0;
+    std::cout << "end readtext" << std::endl;
+    return inputText;
 }
 
 int write_txt(std::string& outputText)                         //write Alphabets to file
 {
+
     int            size  =  outputText.length();   
     std::ofstream  fout;                // create stream for write Alphabets to file. 
     fout.open(PTHS::PATHW);

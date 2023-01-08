@@ -3,6 +3,7 @@
 
 int main(int argc, char** argv)
 {
+    std::srand(time(NULL));
     if (argc==1)
     {
         std::cout << "You not enter name Alphabetsbase. For getting information: " << argv[0] <<  "-h" << std::endl;
@@ -14,12 +15,7 @@ int main(int argc, char** argv)
         printh();
         return 0;
     }
-    
-    Alphabets::path = std::string(argv[1]);      
-    std::srand(time(NULL));                 
-    generator_frst();                       //generating first level
-    generator_scnd();                       //generating second level
-    Writer();                               //write Alphabets to file
+    Controller(std::string(argv[1]));
     
     return 0;
 }
