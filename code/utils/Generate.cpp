@@ -23,15 +23,27 @@ private:
     // int                 ar_check[91][2];
     int                 gen_tmp;                        //variable for generate first level
     
-    bool check(int& size)
+    bool check(int& size, int codeStation)
     {
         unsigned i = 0;
-        while (i<size)
+        
+        if(codeStation == 1){
+            while (i<size)
         {
             if (storageCode.FirstEncryptionLevel[i]==gen_tmp)         //equality check
                 return false;
             i++;
         }
+        }
+        if(codeStation == 2){
+            while (i<size)
+            {
+                if ((storageCode.FirstEncryptionLevel[i]==gen_tmp) || (storageCode.ThirdEncryptionLevel[i] == gen_tmp))         //equality check
+                return false;
+                i++;
+            }
+        }
+        
         return true;
     }
     // bool check(int& firstEncryptionCode, int& secondEncryptionCode)
@@ -72,12 +84,22 @@ public:
         std::cout << "bufferSecondFirst  = " <<  storageCode.bufferSecondFirst << std::endl;
         std::cout << "bufferSecondSecond = " << storageCode.bufferSecondSecond << std::endl;
         std::cout << "bufferSecondThird  = " << storageCode.bufferSecondThird << std::endl;
-
+        std::cout << "FirstEncryptionLevel" << std::endl;
+        for (size_t i = 0; i < storageCode.FirstEncryptionLevel.size(); i++)
+        {
+            std::cout << storageCode.FirstEncryptionLevel[i];
+        }
+        std::cout << "ThirdEncryptionLevel" << std::endl;
+        for (size_t i = 0; i < storageCode.ThirdEncryptionLevel.size(); i++)
+        {
+            std::cout << storageCode.ThirdEncryptionLevel[i];
+        }
+        std::cout << std::endl;
         // std::cout << "bufferSecondSecond = " << storageCode.bufferSecondSecond << std::endl;
         // std::cout << "bufferSecondThird  = " << storageCode.bufferSecondThird << std::endl;
     }
-    void Getter(){
-        //TODO
+    StorageGenerate& Getter(){
+        return storageCode;
     }
 
     int GenerateFirstEncryptionCode(){
@@ -96,7 +118,7 @@ public:
             i++;
             continue;
         }
-        else if (check(size))                            //true - not equal
+        else if (check(size, 1))                            //true - not equal
         {
             storageCode.FirstEncryptionLevel.push_back(gen_tmp);
         }
@@ -291,7 +313,7 @@ int GenerateFourthEncryptionCode(){
             i++;
             continue;
         }
-        else if (check(size))                            //true - not equal
+        else if (check(size, 2))                            //true - not equal
         {
             storageCode.ThirdEncryptionLevel.push_back(gen_tmp);
         }

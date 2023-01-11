@@ -4,7 +4,8 @@ int Controller(std::string path){
     generateCode.GenerateFirstEncryptionCode();                       //generating first level
     generateCode.GenerateSecondEncryptionCode();                       //generating second level
     generateCode.GenerateThirdEncryptionCode();
+    generateCode.GenerateFourthEncryptionCode();
     generateCode.Printer();
-    // Writer();                               //write Alphabets to file
+    Writer(path, generateCode.Getter());                               //write Alphabets to file
     return 0;
 }
