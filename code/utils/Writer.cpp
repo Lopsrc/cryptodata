@@ -1,58 +1,93 @@
-int Writer(std::string& path, StorageGenerate& storageCode)
+
+std::string read_txt()                      //read Alphabets from a file
 {
-    std::ofstream fout;
-    fout.open(path);      //open file
+    std::string         inputText;        //       local variables
+    std::string         txt2;       //  for storing temporary values.
+    std::cout << "begin readtext" << std::endl;
+    std::ifstream       fin;        // create stream for reading Alphabets from a file.     
+    fin.open(PTHS::PATHR);          //open file
+    if(fin.is_open())
+    {
+        if (ST::action_c==1)        //for encryption
+        {
+            while (!(fin.eof()))
+            {
+                std::getline(fin, txt2);        //get value
+                inputText += txt2 ;         //write Alphabets from a file
+
+                inputText += Alphabets::keyw;   //add keyword
+            }
+        }
+        if (ST::action_c==2)            //for encryption
+        {
+            while (!(fin.eof()))
+            {
+                std::getline(fin,txt2);     //get value
+                inputText += txt2;     //write Alphabets from a file
+            }
+        }
+        fin.close();                    
+    }
+    else 
+    {
+        std::cout << ". File opening error, check the correct path.[Read text]" << '\n';
+        exit(1);
+    }
+    std::cout << "end readtext" << std::endl;
+    return inputText;
+}
+
+int write_txt(std::string& outputText)                         //write Alphabets to file
+{
+
+    int            size  =  outputText.length();   
+    std::ofstream  fout;                // create stream for write Alphabets to file. 
+    fout.open(PTHS::PATHW);
     if(fout.is_open())
     {
-        for (size_t i = 0; i < 95; i++)
+        for (size_t i = 0; i < size; i++)
         {
-            if ((i==26) || (i==52) || (i==85))
-                fout << "\n";
-            fout << storageCode.FirstEncryptionLevel[i];                    //write Alphabets first level
-        }
-        fout << "\n";
-       
-        fout << storageCode.bufferFirst;        //write Alphabets second level
-        // fout << storageCode.bufferFirst[i][1];
-        
-        fout << "\n";
-        
-        fout << storageCode.bufferSecond;        //write Alphabets second level
-            // fout << storageCode.bufferSecond[i][1];
-        
-        fout << "\n";
-        
-        
-        fout << storageCode.bufferThird;        //write Alphabets second level
-            // fout << storageCode.bufferThird[i][1];
-        
-        fout << "\n";
-        fout << storageCode.bufferSecondFirst;        //write Alphabets second level
-            // fout << storageCode.bufferFirst[i][1];
-        
-        fout << "\n";
-        
-        
-        fout << storageCode.bufferSecondSecond;        //write Alphabets second level
-            // fout << storageCode.bufferSecond[i][1];
-        
-        fout << "\n";
-        
-        fout << storageCode.bufferSecondThird;        //write Alphabets second level
-            // fout << storageCode.bufferThird[i][1];
-        fout << "\n";
-        for (size_t i = 0; i < 95; i++)
-        {
-            if ((i==26) || (i==52) || (i==85))
-                fout << "\n";
-            fout << storageCode.ThirdEncryptionLevel[i];                    //write Alphabets first level
+            if (outputText[i]==Alphabets::keyw[0])
+            {
+                if (outputText[i+1]==Alphabets::keyw[1])
+                {
+                    if (outputText[i+2]==Alphabets::keyw[2])
+                    {
+                        if (outputText[i+3]==Alphabets::keyw[3])
+                        {
+                            fout << "\n";
+                            i+=3;
+                            continue;
+                        }
+                    }
+                }
+            }
+            fout << outputText[i]; //write Alphabets to file
         }
         fout.close();
     }
     else
     {
-        std::cout << ". File opening error, check the correct path.[Read Alphabetsbase]" << '\n';
+        std::cout << ". File opening error, check the correct path.[Output text]" << '\n';
         exit(1);
     }
     return 0;
+}
+void printv(std::string& outputText)                           //output text in terminal
+{
+    int size = outputText.length();
+    for (size_t i = 0; i < size; i++)
+    {
+        if (outputText[i]==Alphabets::keyw[0])
+            if (outputText[i+1]==Alphabets::keyw[1])
+                if (outputText[i+2]==Alphabets::keyw[2])
+                    if (outputText[i+3]==Alphabets::keyw[3])      //keyword checking
+                    {
+                        std::cout << "\n";
+                        i+=3;
+                        continue;
+                    }
+        std::cout << outputText[i];
+    }
+    std::cout << "\n";
 }
