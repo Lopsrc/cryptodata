@@ -1,29 +1,28 @@
 
-std::string read_txt()                      //read Alphabets from a file
+
+ReadFromFile readFromFile(std::string& path, int cryptoAction)                      //read Alphabets from a file
 {
-    std::string         inputText;        //       local variables
+    ReadFromFile        readFromFileDTO;        //       local variables
     std::string         txt2;       //  for storing temporary values.
-    std::cout << "begin readtext" << std::endl;
     std::ifstream       fin;        // create stream for reading Alphabets from a file.     
-    fin.open(PTHS::PATHR);          //open file
+    fin.open(path);          //open file
     if(fin.is_open())
     {
-        if (ST::action_c==1)        //for encryption
+        if (cryptoAction==1)        //for encryption
         {
             while (!(fin.eof()))
             {
                 std::getline(fin, txt2);        //get value
-                inputText += txt2 ;         //write Alphabets from a file
-
-                inputText += Alphabets::keyw;   //add keyword
+                readFromFileDTO.inputText += txt2 ;         //write Alphabets from a file
+                readFromFileDTO.inputText += Alphabets::keyw;   //add keyword
             }
         }
-        if (ST::action_c==2)            //for encryption
+        if (cryptoAction==2)            //for encryption
         {
             while (!(fin.eof()))
             {
                 std::getline(fin,txt2);     //get value
-                inputText += txt2;     //write Alphabets from a file
+                readFromFileDTO.inputText += txt2;     //write Alphabets from a file
             }
         }
         fin.close();                    
@@ -31,18 +30,17 @@ std::string read_txt()                      //read Alphabets from a file
     else 
     {
         std::cout << ". File opening error, check the correct path.[Read text]" << '\n';
-        exit(1);
+        readFromFileDTO.codeError = 1;
     }
-    std::cout << "end readtext" << std::endl;
-    return inputText;
+    return readFromFileDTO;
 }
 
-int write_txt(std::string& outputText)                         //write Alphabets to file
+int writeToFile(std::string& outputText, std::string& path)                         //write Alphabets to file
 {
 
     int            size  =  outputText.length();   
     std::ofstream  fout;                // create stream for write Alphabets to file. 
-    fout.open(PTHS::PATHW);
+    fout.open(path);
     if(fout.is_open())
     {
         for (size_t i = 0; i < size; i++)
@@ -69,11 +67,11 @@ int write_txt(std::string& outputText)                         //write Alphabets
     else
     {
         std::cout << ". File opening error, check the correct path.[Output text]" << '\n';
-        exit(1);
+        return 1;
     }
     return 0;
 }
-void printv(std::string& outputText)                           //output text in terminal
+void printResult(std::string& outputText)                           //output text in terminal
 {
     int size = outputText.length();
     for (size_t i = 0; i < size; i++)

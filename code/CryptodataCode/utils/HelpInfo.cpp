@@ -1,12 +1,12 @@
 void printh()       //print information
 {
-    std::cout << "Welcome to cryptoAlphabets " << "\n";
+    std::cout << "Welcome to cryptodata " << "\n";
     std::cout  << "\n";
     std::cout << "Compile: " << "\n";
-    std::cout << "\tg++ main.cpp -o cryptoAlphabets " << "\n";
+    std::cout << "\tg++ main.cpp -o cryptodata " << "\n";
     std::cout << "---------------------------------------------------------------------------------------------------\n";
-    std::cout << "Excample: " << "\n\t" << "For Linux OS: ./cryptoAlphabets /media/user/usb/Alphabetsbase.txt -d --rf /example/encry.txt --wf /example/decry.txt" << "\n";
-    std::cout << "\tFor Windows OS : ./cryptoAlphabets.exe /media/user/usb/Alphabetsbase.txt -d --rf /example/encry.txt --wf /example/decry.txt" << "\n";
+    std::cout << "Excample: " << "\n\t" << "For Linux OS: ./cryptodata /media/user/usb/Alphabetsbase.txt -d --rf /example/encry.txt --wf /example/decry.txt" << "\n";
+    std::cout << "\tFor Windows OS : ./cryptodata.exe /media/user/usb/Alphabetsbase.txt -d --rf /example/encry.txt --wf /example/decry.txt" << "\n";
     std::cout << "                                \n";
     std::cout << "---------------------------------------------------------------------------------------------------\n";
     std::cout << "  /media/user/Alphabetsbase.txt     |    First argument  - path to Alphabetsbase, if your not have Alphabetsbase " << "\n";
@@ -33,6 +33,6 @@ void printh()       //print information
 }
 
 void printErr(char* arg){
-    std::cout << "You not enter path to DB or not select action.  For getting information:" << arg << "-h  " << std::endl;
-    std::cout << "Example: " << arg << " /media/user/usb/Alphabetsbase.txt -d " << std::endl;
+    std::cout << "You not enter path to DB or not select action.  For getting information: ./" << arg << "-h  " << std::endl;
+    std::cout << "Example: ./" << arg << " /media/user/usb/Alphabetsbase.txt -d " << std::endl;
 }
