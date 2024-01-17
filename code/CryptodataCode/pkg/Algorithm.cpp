@@ -7,40 +7,35 @@ protected:
 
     std::string         bufferClipboard;
     std::string         bufferClipboard2;
-
     StorageEncryptionCode storageEncryptionCode;
-    void defineLengthForKey(){
-        int result = 0;
-        for (size_t i = 0; i < 10; i++)
-        {
-           
-            
-            
-            result += strlen(storageEncryptionCode.fst_[i]);
-                
-            
-            
-        }
-        std::cout << result << " - result " << std::endl;
-    }
+    StorageEncryptionCodeNew storageEncryptionCodeN;
        
 public:
+
     std::string GetterIT()  {return storageIOText.inputText;}
     std::string GetterOT()  {return storageIOText.outputText;}
-    void Setter(std::string* value) {storageIOText.inputText = *value;}
+    void        Setter(std::string* value) {storageIOText.inputText = *value;}
     
     Cryptography(){}
 
     bool checkLengthForKey(){
-        if (storageEncryptionCode.len_eng   != 130 ||
-            storageEncryptionCode.len_engUp != 130 ||
-            storageEncryptionCode.len_sym   != 165 ||
-            storageEncryptionCode.len_dig   != 50 ||
-            storageEncryptionCode.len_fst   != 60 ||
-            storageEncryptionCode.len_snd   != 60 ||
-            storageEncryptionCode.len_thrd  != 60)
+        // std::cout << storageEncryptionCodeN.englishCryptoKey.length() << "\n" <<
+        // storageEncryptionCodeN.englishUpCryptoKey.length() << "\n" <<
+        // storageEncryptionCodeN.symbolsCryptoKey.length() << "\n" <<
+        // storageEncryptionCodeN.digitalsCryptoKey.length() << "\n" <<
+        // storageEncryptionCodeN.firstLayerForSecondLevel.length() << "\n" <<
+        // storageEncryptionCodeN.secondLayerForSecondLevel.length()<< "\n" <<
+        // storageEncryptionCodeN.thirdLayerForSecondLevel.length()<< std::endl;
+        if (
+            storageEncryptionCodeN.englishCryptoKey.length()           != 130 ||
+            storageEncryptionCodeN.englishUpCryptoKey.length()         != 130 ||
+            storageEncryptionCodeN.symbolsCryptoKey.length()           != 165 ||
+            storageEncryptionCodeN.digitalsCryptoKey.length()           != 50  ||
+            storageEncryptionCodeN.firstLayerForSecondLevel.length()   != 60  ||
+            storageEncryptionCodeN.secondLayerForSecondLevel.length()  != 60  ||
+            storageEncryptionCodeN.thirdLayerForSecondLevel.length()   != 60
+             )
             return false;
-        defineLengthForKey();
         return true;
     }
     bool checkSum(int cryptoAction){
@@ -58,26 +53,34 @@ public:
 
     int write_to_cache(std::string& path)   //write Alphabets to global variable
     {
-        char            bufferForEng[130];          //
-        char            bufferForEngUp[130];         //
-        char            bufferForSymbols[165];         //          local variables  
-        char            bufferForDigitals[50];          //                for
-        char            bufferForFirstLevel[60];          //      storing temporary values.
-        char            bufferForSecondLevel[60];          //
-        char            bufferForThirdLevel[60];          //
+        // char            bufferForEng[130];          //
+        // char            bufferForEngUp[130];         //
+        // char            bufferForSymbols[165];         //          local variables  
+        // char            bufferForDigitals[50];          //                for
+        // char            bufferForFirstLevel[60];          //      storing temporary values.
+        // char            bufferForSecondLevel[60];          //
+        // char            bufferForThirdLevel[60];          //
 
         std::ifstream   fin;                // create stream for reading Alphabets from a file.
         fin.open(path);                     //open file
         if(fin.is_open())
         {
             
-            fin.getline(bufferForEng, 131);     //
-            fin.getline(bufferForEngUp, 131);    //
-            fin.getline(bufferForSymbols, 166);    //      reading 
-            fin.getline(bufferForDigitals, 51);     //        Alphabets
-            fin.getline(bufferForFirstLevel, 61);     //
-            fin.getline(bufferForSecondLevel, 61);     //
-            fin.getline(bufferForThirdLevel, 61);     //
+            // fin.getline(bufferForEng, 131);     //
+            // fin.getline(bufferForEngUp, 131);    //
+            // fin.getline(bufferForSymbols, 166);    //      reading 
+            // fin.getline(bufferForDigitals, 51);     //        Alphabets
+            // fin.getline(bufferForFirstLevel, 61);     //
+            // fin.getline(bufferForSecondLevel, 61);     //
+            // fin.getline(bufferForThirdLevel, 61);     //
+            // fin.close();
+            std::getline(fin, storageEncryptionCodeN.englishCryptoKey);     //
+            std::getline(fin, storageEncryptionCodeN.englishUpCryptoKey);    //
+            std::getline(fin, storageEncryptionCodeN.symbolsCryptoKey);    //      reading 
+            std::getline(fin, storageEncryptionCodeN.digitalsCryptoKey);     //        Alphabets
+            std::getline(fin, storageEncryptionCodeN.firstLayerForSecondLevel);     //
+            std::getline(fin, storageEncryptionCodeN.secondLayerForSecondLevel);     //
+            std::getline(fin, storageEncryptionCodeN.thirdLayerForSecondLevel);     //
             fin.close();
         }
         else
@@ -85,44 +88,49 @@ public:
             std::cout << ". File opening error, check the correct path. [Read Alphabetsbase]" << '\n';
             return 1;
         }
-        for (size_t j = 0, k = 0, p = 0; j < 33; j++)
-        {
-            for (size_t i = 0; i < 5; i++, k++)
-            {
-                if (j < 10) 
-                {
-                    storageEncryptionCode.digitals_crypto[j][i]=bufferForDigitals[k];
-                }
-                if (j < 26)
-                {
-                    storageEncryptionCode.english_crypto[j][i]=bufferForEng[k];             //write to global Alphabets
-                    storageEncryptionCode.english_crypto_up[j][i]=bufferForEngUp[k]; 
-                }
-                if(j < 33)  
-                {
-                    storageEncryptionCode.symbols_crypto[j][i]=bufferForSymbols[k]; 
-                }
-            }
-            if (j < 10)
-            {
-                for (size_t i = 0; i < 3; i++)
-                {
-                    for (size_t l = 0; l < 2; l++, p++)
-                    {
-                        storageEncryptionCode.fst_[j][i][l]  = bufferForFirstLevel[p];              //write to global Alphabets
-                        storageEncryptionCode.snd_[j][i][l]  = bufferForSecondLevel[p];
-                        storageEncryptionCode.thrd_[j][i][l] = bufferForThirdLevel[p];
-                    }
-                }
-            }
-        }
-        storageEncryptionCode.len_eng   = strlen(bufferForEng);
-        storageEncryptionCode.len_engUp = strlen(bufferForEngUp);
-        storageEncryptionCode.len_sym   = strlen(bufferForSymbols);
-        storageEncryptionCode.len_dig   = strlen(bufferForDigitals);
-        storageEncryptionCode.len_fst   = strlen(bufferForFirstLevel);
-        storageEncryptionCode.len_snd   = strlen(bufferForSecondLevel);
-        storageEncryptionCode.len_thrd  = strlen(bufferForThirdLevel);
+
+        // std::cout << storageEncryptionCodeN.englishCryptoKey << "\n" << storageEncryptionCodeN.englishUpCryptoKey << "\n" << storageEncryptionCodeN.symbolsCryptoKey << 
+        // "\n" << storageEncryptionCodeN.digitalsCryptoKey << "\n" << storageEncryptionCodeN.firstLayerForSecondLevel << "\n" << storageEncryptionCodeN.secondLayerForSecondLevel <<
+        // "\n" << storageEncryptionCodeN.thirdLayerForSecondLevel << std::endl;
+
+        // for (size_t j = 0, k = 0, p = 0; j < 33; j++)
+        // {
+        //     for (size_t i = 0; i < 5; i++, k++)
+        //     {
+        //         if (j < 10) 
+        //         {
+        //             storageEncryptionCode.digitals_crypto[j][i]=bufferForDigitals[k];
+        //         }
+        //         if (j < 26)
+        //         {
+        //             storageEncryptionCode.english_crypto[j][i]=bufferForEng[k];             //write to global Alphabets
+        //             storageEncryptionCode.english_crypto_up[j][i]=bufferForEngUp[k]; 
+        //         }
+        //         if(j < 33)  
+        //         {
+        //             storageEncryptionCode.symbols_crypto[j][i]=bufferForSymbols[k]; 
+        //         }
+        //     }
+        //     if (j < 10)
+        //     {
+        //         for (size_t i = 0; i < 3; i++)
+        //         {
+        //             for (size_t l = 0; l < 2; l++, p++)
+        //             {
+        //                 storageEncryptionCode.fst_[j][i][l]  = bufferForFirstLevel[p];              //write to global Alphabets
+        //                 storageEncryptionCode.snd_[j][i][l]  = bufferForSecondLevel[p];
+        //                 storageEncryptionCode.thrd_[j][i][l] = bufferForThirdLevel[p];
+        //             }
+        //         }
+        //     }
+        // }
+        // storageEncryptionCode.len_eng   = strlen(bufferForEng);
+        // storageEncryptionCode.len_engUp = strlen(bufferForEngUp);
+        // storageEncryptionCode.len_sym   = strlen(bufferForSymbols);
+        // storageEncryptionCode.len_dig   = strlen(bufferForDigitals);
+        // storageEncryptionCode.len_fst   = strlen(bufferForFirstLevel);
+        // storageEncryptionCode.len_snd   = strlen(bufferForSecondLevel);
+        // storageEncryptionCode.len_thrd  = strlen(bufferForThirdLevel);
         return 0;
     }
 
@@ -130,28 +138,27 @@ public:
     {
         if (lvl==COND::FIRST_LVL)
         {
-            if      (descript==COND::ENG)           {for (size_t i = 0; i < 5; i++)  {bufferClipboard += storageEncryptionCode.english_crypto[index][i];}}
-            else if (descript==COND::ENG_UP)        {for (size_t i = 0; i < 5; i++)  {bufferClipboard += storageEncryptionCode.english_crypto_up[index][i];}}
-            else if (descript==COND::SYM)           {for (size_t i = 0; i < 5; i++)  {bufferClipboard += storageEncryptionCode.symbols_crypto[index][i];}}
-            else if (descript==COND::DIG)           {for (size_t i = 0; i < 5; i++)  {bufferClipboard += storageEncryptionCode.digitals_crypto[index][i];}}
+            int indexBegin = index * 5;
+            if      (descript==COND::ENG)           {bufferClipboard += storageEncryptionCodeN.englishCryptoKey.substr(indexBegin, 5);}
+            else if (descript==COND::ENG_UP)        {bufferClipboard += storageEncryptionCodeN.englishUpCryptoKey.substr(indexBegin, 5);}
+            else if (descript==COND::SYM)           {bufferClipboard += storageEncryptionCodeN.symbolsCryptoKey.substr(indexBegin, 5);}
+            else if (descript==COND::DIG)           {bufferClipboard += storageEncryptionCodeN.digitalsCryptoKey.substr(indexBegin, 5);}
         }
         if (lvl==COND::SECOND_LVL)
         {
+            int       indexBegin    = index * 6; 
             int       randomColumn  = rand() % 3;                //generating a value for randomly selecting an array element
             int       randomSelect  = rand() % 3;          //generating a value for a random array selection
             switch (randomSelect)
             {
             case 0:
-                for (size_t i = 0; i < 2; i++)  
-                    storageIOText.outputText += storageEncryptionCode.fst_[index][randomColumn][i];
+                storageIOText.outputText += storageEncryptionCodeN.firstLayerForSecondLevel.substr(indexBegin+randomColumn*2, 2);
                 break;
             case 1:
-                for (size_t i = 0; i < 2; i++)  
-                    storageIOText.outputText += storageEncryptionCode.snd_[index][randomColumn][i];
+                storageIOText.outputText += storageEncryptionCodeN.secondLayerForSecondLevel.substr(indexBegin+randomColumn*2, 2);
                 break;
             case 2:
-                for (size_t i = 0; i < 2; i++)  
-                    storageIOText.outputText += storageEncryptionCode.thrd_[index][randomColumn][i];
+                storageIOText.outputText += storageEncryptionCodeN.thirdLayerForSecondLevel.substr(indexBegin+randomColumn*2, 2);
                 break;
             default:
                 break;
