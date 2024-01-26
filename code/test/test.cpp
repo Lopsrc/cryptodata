@@ -1,73 +1,176 @@
 #include <gtest/gtest.h>
 #include "../CryptodataCode/cmd/headers.h"
-// Demonstrate some basic assertions.
-TEST(HelloTest, BasicAssertions) {
-  // Expect two strings not to be equal.
-  EXPECT_STRNE("hello", "world");
-  // Expect equality.
-  EXPECT_EQ(7 * 6, 4);
-}
 
-void test1(){
-  StorageIOText storageIOText;
+namespace checkData
+{
+  std::string pathForReadData ;
+  std::string pathForWriteData;
+  std::string pathForReadKey;
+  std::string data = "abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ  .,:@!?;\"'()<>-[]{}#$^&+/\\|=~_%*` 0123456789";
+} 
+
+int test1(){
+  InputArgs inputArgs;
+  inputArgs.pathToKey     = "/home/serpc/Projects/cpp/cryptodata/code/test/example/test.txt";
+  inputArgs.cryptoAction  = COND::ENCRYPTION;
+
+  std::cout << "TEST1.1 - encryption." << std::endl;
+
   CryptographyEnglish cryptography;
-
   cryptography.write_to_cache(inputArgs.pathToKey);
-  if (!(cryptography.checkLengthForKey()))
-  {
-    std::cout << "Key not valid" << std::endl;
-    exit(1);
-  }
-  
-  if(inputArgs.inputOfText)
-  {
-    std::cout << "Enter text: ";
-    std::getline(std::cin, storageIOText.inputText);   //entering text using the keyboard  
-    cryptography.Setter(&storageIOText.inputText);
+  EXPECT_TRUE(cryptography.checkCryptoKey());
 
-  }
-  else {
-      ReadFromFile buffer = readFromFile(inputArgs.pathForReadToFile, inputArgs.cryptoAction);
-      if (buffer.codeError==1)
-      {
-        exit(1); //TODO
-      }
-      
-      storageIOText.inputText = buffer.inputText;                     //reading text from a file
-      cryptography.Setter(&storageIOText.inputText);
-  }
-  if      (inputArgs.cryptoAction==1)   {cryptography.encryption();}                   //encryption first level
-  else if (inputArgs.cryptoAction==2)   {cryptography.decryption();}                   //decryption first level
+  cryptography.Setter(&checkData::data);
+  cryptography.encryption();
+  EXPECT_TRUE(cryptography.checkSum(inputArgs.cryptoAction));
+
+  std::string processingData = cryptography.GetterOT();
+
+  std::cout << "TEST1.2 - decryption." << std::endl;
   
-  if (!(cryptography.checkSum(inputArgs.cryptoAction)))
-  {
-    std::cout << "Входной и выходной тексты не эквивалентны" << std::endl;
-    exit(1);
-  }
-  
-  if (inputArgs.displayedText)
-  {
-    storageIOText.inputText = cryptography.GetterOT();
-    std::cout << "Output text:\n" << "Begin\n\n";
-    printResult(storageIOText.inputText);
-    std::cout <<  "\nEnd\n";                   //writing Alphabets to a file
+  inputArgs.cryptoAction = COND::DECRYPTION;
+
+  cryptography.resettingTheValue();
+  cryptography.Setter(&processingData);
+  cryptography.decryption();
+  EXPECT_TRUE(cryptography.checkSum(inputArgs.cryptoAction));
+
+  std::string processingData1 = cryptography.GetterOT(); 
+
+  EXPECT_EQ(processingData1, checkData::data);
+  return 0;
 }
-  else     //print in terminal
-  {
-    storageIOText.inputText = cryptography.GetterOT();
-    if(writeToFile(storageIOText.inputText, inputArgs.pathForWriteToFile)==1){
-        exit(1); //TODO
-    }
-  }
+int test2(){
+  InputArgs inputArgs;
+  inputArgs.pathToKey           = "/home/serpc/Projects/cpp/cryptodata/code/test/example/test.txt";
+  inputArgs.pathForReadToFile   = "/home/serpc/Projects/cpp/cryptodata/code/test/example/crypto.txt";
+  inputArgs.pathForWriteToFile  = "/home/serpc/Projects/cpp/cryptodata/code/test/example/encry.txt";
+  inputArgs.cryptoAction        = COND::ENCRYPTION;
+  inputArgs.inputOfText         = COND::FILE_IO;
+  inputArgs.displayedText       = COND::FILE_IO;
+
+  std::cout << "TEST2.1 - encryption." << std::endl;
+
+  CryptographyEnglish cryptography;
+  cryptography.write_to_cache(inputArgs.pathToKey);
+  EXPECT_TRUE(cryptography.checkCryptoKey());
+
+  ReadFromFile readFile = readFromFile(inputArgs.pathForReadToFile, inputArgs.cryptoAction);
+  EXPECT_EQ(readFile.codeError, 0);
+
+  cryptography.Setter(&readFile.inputText);
+  cryptography.encryption();
+  EXPECT_TRUE(cryptography.checkSum(inputArgs.cryptoAction));
+
+  std::string encryptionData = cryptography.GetterOT();
+  EXPECT_EQ(writeToFile(inputArgs.pathForWriteToFile, encryptionData), 0);
+
+  std::cout << "TEST2.2 - decryprion." << std::endl;
+
+  inputArgs.pathForReadToFile   = "/home/serpc/Projects/cpp/cryptodata/code/test/example/encry.txt";
+  inputArgs.pathForWriteToFile  = "/home/serpc/Projects/cpp/cryptodata/code/test/example/decry.txt";
+  inputArgs.cryptoAction        = COND::DECRYPTION;
+  cryptography.resettingTheValue();
+
+  readFile = readFromFile(inputArgs.pathForReadToFile, inputArgs.cryptoAction);
+  EXPECT_EQ(readFile.codeError, 0);
+
+  cryptography.Setter(&readFile.inputText);
+  cryptography.decryption();
+  EXPECT_TRUE(cryptography.checkSum(inputArgs.cryptoAction));
+
+  encryptionData = cryptography.GetterOT();
+  EXPECT_EQ(writeToFile(inputArgs.pathForWriteToFile, encryptionData), 0);
+
+  return 0;
+}
+int test3(){
+  InputArgs inputArgs;
+  inputArgs.pathToKey           = "/home/serpc/Projects/cpp/cryptodata/code/test/example/test.txt";
+  inputArgs.pathForReadToFile   = "";
+  inputArgs.pathForWriteToFile  = "/home/serpc/Projects/cpp/cryptodata/code/test/example/encry1.txt";
+  inputArgs.cryptoAction        = COND::ENCRYPTION;
+  inputArgs.inputOfText         = COND::CLI_IO;
+  inputArgs.displayedText       = COND::FILE_IO;
+
+  std::cout << "TEST3.1 - encryption." << std::endl;
+
+  CryptographyEnglish cryptography;
+  cryptography.write_to_cache(inputArgs.pathToKey);
+  EXPECT_TRUE(cryptography.checkCryptoKey());
+
+  cryptography.Setter(&checkData::data);
+  cryptography.encryption();
+  EXPECT_TRUE(cryptography.checkSum(inputArgs.cryptoAction));
+
+  std::string encryptionData = cryptography.GetterOT();
+  EXPECT_EQ(writeToFile(inputArgs.pathForWriteToFile, encryptionData), 0);
+
+  std::cout << "TEST3.2 - decryption." << std::endl;
+
+  inputArgs.pathForReadToFile   = "/home/serpc/Projects/cpp/cryptodata/code/test/example/encry1.txt";
+  inputArgs.pathForWriteToFile  = "";
+  inputArgs.cryptoAction        = COND::DECRYPTION;
+  inputArgs.inputOfText         = COND::FILE_IO;
+  inputArgs.displayedText       = COND::CLI_IO;
+  cryptography.resettingTheValue();
+
+  ReadFromFile readFile = readFromFile(inputArgs.pathForReadToFile, inputArgs.cryptoAction);
+  EXPECT_EQ(readFile.codeError, 0);
+
+  cryptography.Setter(&readFile.inputText);
+  cryptography.decryption();
+  EXPECT_TRUE(cryptography.checkSum(inputArgs.cryptoAction));
+
+  encryptionData = cryptography.GetterOT();
+
+std::cout << "TEST3.3 - encryption." << std::endl;
+
+  cryptography.resettingTheValue();
+  inputArgs.pathForReadToFile   = "/home/serpc/Projects/cpp/cryptodata/code/test/example/crypto.txt";
+  inputArgs.pathForWriteToFile  = "";
+  inputArgs.cryptoAction        = COND::ENCRYPTION;
+  inputArgs.inputOfText         = COND::FILE_IO;
+  inputArgs.displayedText       = COND::CLI_IO;
+
+  readFile = readFromFile(inputArgs.pathForReadToFile, inputArgs.cryptoAction);
+  EXPECT_EQ(readFile.codeError, 0);
+
+  cryptography.Setter(&readFile.inputText);
+  cryptography.encryption();
+  EXPECT_TRUE(cryptography.checkSum(inputArgs.cryptoAction));
+
+  encryptionData = cryptography.GetterOT();
+
+  std::cout << "TEST3.4 - decryption." << std::endl;
+
+  inputArgs.pathForReadToFile   = "";
+  inputArgs.pathForWriteToFile  = "/home/serpc/Projects/cpp/cryptodata/code/test/example/decry1.txt";
+  inputArgs.cryptoAction        = COND::DECRYPTION;
+  inputArgs.inputOfText         = COND::CLI_IO;
+  inputArgs.displayedText       = COND::FILE_IO;
+  cryptography.resettingTheValue();
+
+  cryptography.Setter(&encryptionData);
+  cryptography.decryption();
+  EXPECT_TRUE(cryptography.checkSum(inputArgs.cryptoAction));
+
+  encryptionData = cryptography.GetterOT();
+  EXPECT_EQ(writeToFile(inputArgs.pathForWriteToFile, encryptionData), 0);
+
+  return 0;
+}
+
+TEST(Test, BasicAssertions) 
+{
+  test1();
+  test2();
+  test3();
 }
 
 
-
-
-int main(){
-    CryptographyEnglish cr;
-    cr.GetterIT();
-    EXPECT_STRNE("hello", "world");
-    testing::InitGoogleTest();
-    return RUN_ALL_TESTS();
+int main()
+{
+  testing::InitGoogleTest();
+  return RUN_ALL_TESTS();
 }

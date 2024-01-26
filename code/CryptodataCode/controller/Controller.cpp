@@ -1,4 +1,15 @@
 
+struct InputArgs
+{
+    int cryptoAction    = COND::NOT_ACTION;   
+    int inputOfText     = COND::CLI_IO;            //true - by keyboard, false - from a file.
+    int displayedText   = COND::CLI_IO;          //true - writing to the file, false - printing in the terminal.
+    std::string         pathForReadToFile;              // file path. Read.
+    std::string         pathForWriteToFile;              // file path. Write.
+    std::string         pathToKey;
+};
+
+
 InputArgs processingArgs(int argc, char** argv){
     InputArgs inputArgs;
     if (argc==1 || (argc==2 && argv[1]!="-h"))        //check input arguments
@@ -13,21 +24,20 @@ InputArgs processingArgs(int argc, char** argv){
     }
     else if (argc >= 3)
     {
-        if(std::string(argv[2])=="-e")  inputArgs.cryptoAction = 1;                       //variable that stores the state(-e - encryption (=1))
-        if(std::string(argv[2])=="-d")  inputArgs.cryptoAction = 2;
+        if(std::string(argv[2])=="-e")  inputArgs.cryptoAction = COND::ENCRYPTION;                       //variable that stores the state(-e - encryption (=1))
+        if(std::string(argv[2])=="-d")  inputArgs.cryptoAction = COND::DECRYPTION;
         
         if (argc == 5)
         {
-            std::cout << 0001 << std::endl;
             if((std::string(argv[3])=="--wf"))
             {   
                 inputArgs.pathForWriteToFile = std::string(argv[4]);     //path for writing a Alphabets from file
-                inputArgs.displayedText = false;
+                inputArgs.displayedText = COND::FILE_IO;
             }
             if((std::string(argv[3])=="--rf"))
             {   
                 inputArgs.pathForReadToFile = std::string(argv[4]);     //path for reading a Alphabets from file
-                inputArgs.inputOfText = false;
+                inputArgs.inputOfText = COND::FILE_IO;
             }
             
         }
@@ -36,12 +46,12 @@ InputArgs processingArgs(int argc, char** argv){
             if((std::string(argv[3])=="--rf"))
             {   
                 inputArgs.pathForReadToFile = std::string(argv[4]);     //path for reading a Alphabets from file
-                inputArgs.displayedText = false;
+                inputArgs.displayedText = COND::FILE_IO;
             }
             if(std::string(argv[5])=="--wf")
             {
                 inputArgs.pathForWriteToFile = std::string(argv[6]);     //path for write Alphabets to file
-                inputArgs.inputOfText = false;
+                inputArgs.inputOfText = COND::FILE_IO;
             }
         }
         inputArgs.pathToKey = argv[1];
@@ -56,20 +66,20 @@ int Controller(InputArgs inputArgs)        //function for manage application
     CryptographyEnglish cryptography;
 
     cryptography.write_to_cache(inputArgs.pathToKey);
-    if (!(cryptography.checkLengthForKey()))
+    if (!(cryptography.checkCryptoKey()))
     {
         std::cout << "Key not valid" << std::endl;
         exit(1);
     }
-    
-    if(inputArgs.inputOfText)
+
+    if(inputArgs.inputOfText == COND::CLI_IO)
     {
         std::cout << "Enter text: ";
         std::getline(std::cin, storageIOText.inputText);   //entering text using the keyboard  
         cryptography.Setter(&storageIOText.inputText);
 
     }
-    else {
+    else if(inputArgs.inputOfText == COND::FILE_IO) {
         ReadFromFile buffer = readFromFile(inputArgs.pathForReadToFile, inputArgs.cryptoAction);
         if (buffer.codeError==1)
         {
@@ -79,8 +89,8 @@ int Controller(InputArgs inputArgs)        //function for manage application
         storageIOText.inputText = buffer.inputText;                     //reading text from a file
         cryptography.Setter(&storageIOText.inputText);
     }
-    if      (inputArgs.cryptoAction==1)   {cryptography.encryption();}                   //encryption first level
-    else if (inputArgs.cryptoAction==2)   {cryptography.decryption();}                   //decryption first level
+    if      (inputArgs.cryptoAction==COND::ENCRYPTION)   {cryptography.encryption();}                   //encryption first level
+    else if (inputArgs.cryptoAction==COND::DECRYPTION)   {cryptography.decryption();}                   //decryption first level
     
     if (!(cryptography.checkSum(inputArgs.cryptoAction)))
     {
@@ -88,7 +98,7 @@ int Controller(InputArgs inputArgs)        //function for manage application
         exit(1);
     }
     
-    if (inputArgs.displayedText)
+    if (inputArgs.displayedText == COND::CLI_IO)
     {
         storageIOText.inputText = cryptography.GetterOT();
         std::cout << "Output text:\n" << "Begin\n\n";
@@ -98,7 +108,7 @@ int Controller(InputArgs inputArgs)        //function for manage application
     else     //print in terminal
     {
         storageIOText.inputText = cryptography.GetterOT();
-        if(writeToFile(storageIOText.inputText, inputArgs.pathForWriteToFile)==1){
+        if(writeToFile(inputArgs.pathForWriteToFile, storageIOText.inputText)==1){
             exit(1); //TODO
         }
     }

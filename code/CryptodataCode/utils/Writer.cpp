@@ -1,4 +1,10 @@
+struct ReadFromFile
+{
+    std::string inputText;  //Text from the file.
+    int codeError = 0;          // 0 (no error),or 1(error).
+};
 
+const std::string   keyw = "_N0_";                                              //line separator.
 
 ReadFromFile readFromFile(std::string& path, int cryptoAction)                      //read Alphabets from a file
 {
@@ -8,16 +14,16 @@ ReadFromFile readFromFile(std::string& path, int cryptoAction)                  
     fin.open(path);          //open file
     if(fin.is_open())
     {
-        if (cryptoAction==1)        //for encryption
+        if (cryptoAction==COND::ENCRYPTION)        //for encryption
         {
             while (!(fin.eof()))
             {
                 std::getline(fin, txt2);        //get value
                 readFromFileDTO.inputText += txt2 ;         //write Alphabets from a file
-                readFromFileDTO.inputText += Alphabets::keyw;   //add keyword
+                readFromFileDTO.inputText += keyw;   //add keyword
             }
         }
-        if (cryptoAction==2)            //for encryption
+        if (cryptoAction==COND::DECRYPTION)            //for encryption
         {
             while (!(fin.eof()))
             {
@@ -35,9 +41,8 @@ ReadFromFile readFromFile(std::string& path, int cryptoAction)                  
     return readFromFileDTO;
 }
 
-int writeToFile(std::string& outputText, std::string& path)                         //write Alphabets to file
+int writeToFile(std::string& path, std::string& outputText)                         //write Alphabets to file
 {
-
     int            size  =  outputText.length();   
     std::ofstream  fout;                // create stream for write Alphabets to file. 
     fout.open(path);
@@ -45,20 +50,10 @@ int writeToFile(std::string& outputText, std::string& path)                     
     {
         for (size_t i = 0; i < size; i++)
         {
-            if (outputText[i]==Alphabets::keyw[0])
-            {
-                if (outputText[i+1]==Alphabets::keyw[1])
-                {
-                    if (outputText[i+2]==Alphabets::keyw[2])
-                    {
-                        if (outputText[i+3]==Alphabets::keyw[3])
-                        {
-                            fout << "\n";
-                            i+=3;
-                            continue;
-                        }
-                    }
-                }
+            if (outputText.substr(i,4)==keyw){
+                fout << "\n";
+                i+=3;
+                continue;
             }
             fout << outputText[i]; //write Alphabets to file
         }
@@ -76,15 +71,11 @@ void printResult(std::string& outputText)                           //output tex
     int size = outputText.length();
     for (size_t i = 0; i < size; i++)
     {
-        if (outputText[i]==Alphabets::keyw[0])
-            if (outputText[i+1]==Alphabets::keyw[1])
-                if (outputText[i+2]==Alphabets::keyw[2])
-                    if (outputText[i+3]==Alphabets::keyw[3])      //keyword checking
-                    {
-                        std::cout << "\n";
-                        i+=3;
-                        continue;
-                    }
+        if (outputText.substr(i,4)==keyw){
+            std::cout << "\n";
+            i+=3;
+            continue;
+        }
         std::cout << outputText[i];
     }
     std::cout << "\n";
