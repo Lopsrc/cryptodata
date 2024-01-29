@@ -1,18 +1,17 @@
 
 struct InputArgs
 {
-    int cryptoAction    = COND::NOT_ACTION;   
-    int inputOfText     = COND::CLI_IO;            //true - by keyboard, false - from a file.
-    int displayedText   = COND::CLI_IO;          //true - writing to the file, false - printing in the terminal.
-    std::string         pathForReadToFile;              // file path. Read.
-    std::string         pathForWriteToFile;              // file path. Write.
+    int                 cryptoAction  = COND::NOT_ACTION;   
+    int                 inputOfText   = COND::CLI_IO;         
+    int                 displayedText = COND::CLI_IO;         
+    std::string         pathForReadToFile;                    
+    std::string         pathForWriteToFile;                   
     std::string         pathToKey;
 };
 
-
 InputArgs processingArgs(int argc, char** argv){
     InputArgs inputArgs;
-    if (argc==1 || (argc==2 && argv[1]!="-h"))        //check input arguments
+    if (argc==1 || (argc==2 && argv[1]!="-h"))        
     {
         printErr(argv[0]);
         exit(1);
@@ -24,34 +23,33 @@ InputArgs processingArgs(int argc, char** argv){
     }
     else if (argc >= 3)
     {
-        if(std::string(argv[2])=="-e")  inputArgs.cryptoAction = COND::ENCRYPTION;                       //variable that stores the state(-e - encryption (=1))
+        if(std::string(argv[2])=="-e")  inputArgs.cryptoAction = COND::ENCRYPTION;                      
         if(std::string(argv[2])=="-d")  inputArgs.cryptoAction = COND::DECRYPTION;
         
         if (argc == 5)
         {
             if((std::string(argv[3])=="--wf"))
             {   
-                inputArgs.pathForWriteToFile = std::string(argv[4]);     //path for writing a Alphabets from file
-                inputArgs.displayedText = COND::FILE_IO;
+                inputArgs.pathForWriteToFile = std::string(argv[4]);   
+                inputArgs.displayedText      = COND::FILE_IO;
             }
             if((std::string(argv[3])=="--rf"))
             {   
-                inputArgs.pathForReadToFile = std::string(argv[4]);     //path for reading a Alphabets from file
-                inputArgs.inputOfText = COND::FILE_IO;
+                inputArgs.pathForReadToFile = std::string(argv[4]);    
+                inputArgs.inputOfText       = COND::FILE_IO;
             }
-            
         }
         else if (argc == 7)
         {
             if((std::string(argv[3])=="--rf"))
             {   
-                inputArgs.pathForReadToFile = std::string(argv[4]);     //path for reading a Alphabets from file
-                inputArgs.displayedText = COND::FILE_IO;
+                inputArgs.pathForReadToFile = std::string(argv[4]);    
+                inputArgs.displayedText     = COND::FILE_IO;
             }
             if(std::string(argv[5])=="--wf")
             {
-                inputArgs.pathForWriteToFile = std::string(argv[6]);     //path for write Alphabets to file
-                inputArgs.inputOfText = COND::FILE_IO;
+                inputArgs.pathForWriteToFile = std::string(argv[6]);   
+                inputArgs.inputOfText        = COND::FILE_IO;
             }
         }
         inputArgs.pathToKey = argv[1];
@@ -60,56 +58,58 @@ InputArgs processingArgs(int argc, char** argv){
     return inputArgs;
 }
 
-int Controller(InputArgs inputArgs)        //function for manage application
+int Controller(InputArgs inputArgs)        
 {
     StorageIOText storageIOText;
     CryptographyEnglish cryptography;
 
-    cryptography.write_to_cache(inputArgs.pathToKey);
+    cryptography.writeToCache(inputArgs.pathToKey);
     if (!(cryptography.checkCryptoKey()))
     {
-        std::cout << "Key not valid" << std::endl;
+        std::cout << "Key not valid." << std::endl;
         exit(1);
     }
 
     if(inputArgs.inputOfText == COND::CLI_IO)
     {
         std::cout << "Enter text: ";
-        std::getline(std::cin, storageIOText.inputText);   //entering text using the keyboard  
+        std::getline(std::cin, storageIOText.inputText);   
         cryptography.Setter(&storageIOText.inputText);
 
     }
     else if(inputArgs.inputOfText == COND::FILE_IO) {
-        ReadFromFile buffer = readFromFile(inputArgs.pathForReadToFile, inputArgs.cryptoAction);
-        if (buffer.codeError==1)
+        ReadFromFile readFromFile = readFile(inputArgs.pathForReadToFile, inputArgs.cryptoAction);
+        if (readFromFile.codeError==1)
         {
-            exit(1); //TODO
+            std::cout << "Data reading error. Check the path." << std::endl;
+            exit(1); 
         }
-        
-        storageIOText.inputText = buffer.inputText;                     //reading text from a file
+        storageIOText.inputText = readFromFile.inputText;                     
         cryptography.Setter(&storageIOText.inputText);
     }
-    if      (inputArgs.cryptoAction==COND::ENCRYPTION)   {cryptography.encryption();}                   //encryption first level
-    else if (inputArgs.cryptoAction==COND::DECRYPTION)   {cryptography.decryption();}                   //decryption first level
+    if      (inputArgs.cryptoAction==COND::ENCRYPTION)   {cryptography.encryption();}                   
+    else if (inputArgs.cryptoAction==COND::DECRYPTION)   {cryptography.decryption();}                   
     
     if (!(cryptography.checkSum(inputArgs.cryptoAction)))
     {
-        std::cout << "Входной и выходной тексты не эквивалентны" << std::endl;
+        std::cout << "Input and output text not equal." << std::endl;
         exit(1);
     }
     
     if (inputArgs.displayedText == COND::CLI_IO)
     {
         storageIOText.inputText = cryptography.GetterOT();
-        std::cout << "Output text:\n" << "Begin\n\n";
+        std::cout << "Output text:\n" << std::endl;
         printResult(storageIOText.inputText);
-        std::cout <<  "\nEnd\n";                   //writing Alphabets to a file
+        std::cout <<  "\nEnd\n";                   
     }
-    else     //print in terminal
+    else     
     {
         storageIOText.inputText = cryptography.GetterOT();
-        if(writeToFile(inputArgs.pathForWriteToFile, storageIOText.inputText)==1){
-            exit(1); //TODO
+        if(!(writeToFile(inputArgs.pathForWriteToFile, storageIOText.inputText)))
+        {
+            std::cout << "Data writing error. Check the path." << std::endl;
+            exit(1); 
         }
     }
     return 0;

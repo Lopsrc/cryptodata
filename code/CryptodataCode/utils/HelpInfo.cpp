@@ -33,6 +33,6 @@ void printh()       //print information
 }
 
 void printErr(char* arg){
-    std::cout << "You not enter path to DB or not select action.  For getting information: ./" << arg << "-h  " << std::endl;
-    std::cout << "Example: ./" << arg << " /media/user/usb/Alphabetsbase.txt -d " << std::endl;
+    std::cout << "You not enter path to DB or not select action.  For getting information: " << arg << " -h " << std::endl;
+    std::cout << "Example: " << arg << " /media/user/usb/Alphabetsbase.txt -d " << std::endl;
 }

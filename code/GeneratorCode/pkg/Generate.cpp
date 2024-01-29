@@ -1,68 +1,124 @@
-const char ALL_SYMBOLS[96]  =  "a b.c:d,e@f!g?h;i\"j'k(l)m<n>o-p[q]r{s}t#u$v^w&x+y/zA\\B|C=D~E_F*G`H0I1J2K3L4M5N6O7P8Q9%RSTUVWXYZ";
-const int MIN = 10000, MAX = 99999;         //range numbers
 
 struct StorageGenerate
 {
-    std::string                bufferFirst;             //second level
-    std::string                bufferSecond;             //
-    std::string                bufferThird;             //
+    std::string                 secondLevelFirstVersion;             //second level
+    std::string                 secondLevelSecondVersion;             //
+    std::string                 secondLevelThirdVersion;             //
     
-    std::vector<int>    FirstEncryptionLevel;                             //storage buffer
+    std::vector<int>            firstLevelCode;                             //storage buffer
 };
 struct StorageGenerateIndexes
 {
-    int             generateIndex;                //variables for generate
+    int             generateIndexFirst;                //variables for generate
     int             generateIndexSecond;               //
+};
+struct LengthOfAllSymbols
+{
+    int lenOfDownLetters, lenOfUpLetters, lenOfSymbols, lenOfDigitals;
+};
+
+class Generate
+{
+protected:
+    StorageGenerate         storageKeys;
+    StorageGenerateIndexes  storageIndexes;
+    LengthOfAllSymbols      LengthOfSymbols;
+    
+    std::string             buffer;                         //Storing intermediate calculations.
+    int                     quantityAllSymbols;
+    const int               MIN = 10000, MAX = 99999;       //The range of values for generating the first key.
+    int                     gen;                            //For generating the first key.
+
+public:
+    virtual void            generateIndexes()               = 0;
+    virtual void            pushToBuffer()                  = 0;
+
+    virtual bool            checkSameFirstLevel()           = 0;
+    virtual bool            checkLengthOfKey()              = 0;
+
+    virtual bool            checkSameSecondLevel()          = 0;
+    virtual int             GenerateFirstEncryptionCode()   = 0;
+    virtual int             GenerateSecondEncryptionCode()  = 0;
+
+    StorageGenerate&        Getter()     {return storageKeys;}
+    bool                     WriteKeyToFile(std::string& path)
+    {
+        std::ofstream fout;
+        fout.open(path);      //open file
+        if(fout.is_open())
+        {
+            //Writing the first key to the file.
+            for (size_t i = 0; i < quantityAllSymbols; i++)
+            {
+                if ((i==LengthOfSymbols.lenOfDownLetters) || 
+                    (i==LengthOfSymbols.lenOfDownLetters+LengthOfSymbols.lenOfUpLetters) || 
+                    (i==LengthOfSymbols.lenOfDownLetters+LengthOfSymbols.lenOfUpLetters+LengthOfSymbols.lenOfSymbols)
+                    )
+                    fout << "\n";                         //Move to the next line if the key has ended.
+                fout << storageKeys.firstLevelCode[i];                    
+            }
+            fout << "\n";
+            
+            //Writing the second key to the file. 
+            fout << storageKeys.secondLevelFirstVersion;        
+            fout << "\n";
+            
+            fout << storageKeys.secondLevelSecondVersion;       
+            fout << "\n";
+            
+            fout << storageKeys.secondLevelThirdVersion;        
+            fout.close();
+        }
+        else
+        {
+            std::cout << ". File opening error, check the correct path.[Read Alphabetsbase]" << '\n';
+            return false;
+        }
+        return true;
+    }
 };
 
 
-class GenerateEncryptionCode {
+class GenerateEnglishCode:public Generate
+{
 private:
-    StorageGenerate storageKeys;
-    StorageGenerateIndexes storageIndexes;
-    int                 gen_tmp;                        //variable for generate first level
-    int                 quantity = 96;
-    std::string     buffer;
-    void generateIndexes(){
-        storageIndexes.generateIndex  = rand() % 95;
-        storageIndexes.generateIndexSecond= rand() % 95;
-    }
-    bool checkSame()
+    void generateIndexes()
     {
-        for(int i = 0; i<storageKeys.FirstEncryptionLevel.size(); i++)
+        storageIndexes.generateIndexFirst   = 32 +(rand() % 95);    //range (32-126) 
+        storageIndexes.generateIndexSecond  = 32 +(rand() % 95);    //for ASCII table.
+    }
+    void pushToBuffer()
+    {
+        buffer.clear();
+        buffer.push_back(char(storageIndexes.generateIndexFirst));
+        buffer.push_back(char(storageIndexes.generateIndexSecond));
+    }
+    
+    bool checkSameFirstLevel()
+    {
+        for(int i = 0; i<storageKeys.firstLevelCode.size(); i++)
         {
-            if (storageKeys.FirstEncryptionLevel[i]==gen_tmp)         //equality check
+            if (storageKeys.firstLevelCode[i]==gen)         
                 return false;
         }
         return true;
     }
-    void pushToBuffer(){
-        buffer.clear();
-        buffer.push_back(ALL_SYMBOLS[storageIndexes.generateIndex]);
-        buffer.push_back(ALL_SYMBOLS[storageIndexes.generateIndexSecond]);
-    }
-    int equals(){
-        return storageKeys.bufferFirst.find(buffer)!=-1 || storageKeys.bufferSecond.find(buffer)!=-1 || storageKeys.bufferThird.find(buffer)!=-1;
-    }
-public:
-    StorageGenerate& Getter(){
-        return storageKeys;
-    }
-
+    
     int GenerateFirstEncryptionCode()
     {
-        for(int i = 0;i < quantity; i++)
+        for(int i = 0;i < quantityAllSymbols; i++)
         {
-            gen_tmp = MIN + rand() % (MAX - MIN); //generate random number
-            if (storageKeys.FirstEncryptionLevel.empty())                       
+            gen = MIN + rand() % (MAX - MIN);           //random number generation
+            if (storageKeys.firstLevelCode.empty())                       
             {
-                storageKeys.FirstEncryptionLevel.push_back(gen_tmp);      
-                i++;
+                storageKeys.firstLevelCode.push_back(gen);      
                 continue;
             }
-            if (checkSame())                            //true - not equal
-                storageKeys.FirstEncryptionLevel.push_back(gen_tmp);
+            if (checkSameFirstLevel())           
+            {                         
+                storageKeys.firstLevelCode.push_back(gen);
                 continue;
+            }
             i--;
         }
         return 0;
@@ -72,17 +128,20 @@ public:
     {
         for (size_t i = 0; i < 30; i++)
         {
-            generateIndexes();
+            generateIndexes();                  
             pushToBuffer();
 
             if (i==0)
             {
-                storageKeys.bufferFirst.append(buffer);
+                storageKeys.secondLevelFirstVersion.append(buffer);
                 continue;
             }
-            if (equals())
+            if (checkSameSecondLevel())
+            {
                 i--;
-            storageKeys.bufferFirst.append(buffer);
+                continue;
+            }
+            storageKeys.secondLevelFirstVersion.append(buffer);
         }
         for (size_t i = 0; i < 30; i++)
         {
@@ -91,13 +150,15 @@ public:
             
             if (i==0)
             {
-                storageKeys.bufferSecond.append(buffer);
+                storageKeys.secondLevelSecondVersion.append(buffer);
                 continue;
             }
-            if (equals())   
+            if (checkSameSecondLevel())
+            {
                 i--;
-
-            storageKeys.bufferSecond.append(buffer);
+                continue;
+            }
+            storageKeys.secondLevelSecondVersion.append(buffer);
         }
         for (size_t i = 0; i < 30; i++)
         {
@@ -106,44 +167,47 @@ public:
             
             if (i==0)
             {
-                storageKeys.bufferThird.append(buffer);
+                storageKeys.secondLevelThirdVersion.append(buffer);
                 continue;
             }
-            if (equals())   
+            if (checkSameSecondLevel())
+            {   
                 i--;
-            storageKeys.bufferThird.append(buffer);
+                continue;
+            }
+            storageKeys.secondLevelThirdVersion.append(buffer);
         }
         return 0;
     }
-
-    int WriteKeyToFile(std::string& path){
-        std::ofstream fout;
-        fout.open(path);      //open file
-        if(fout.is_open())
+    
+    bool checkSameSecondLevel()
+    {
+        return storageKeys.secondLevelFirstVersion.find(buffer)!=-1 || storageKeys.secondLevelSecondVersion.find(buffer)!=-1 || storageKeys.secondLevelThirdVersion.find(buffer)!=-1;
+    }
+public:
+    GenerateEnglishCode(){
+        quantityAllSymbols                  = 95;
+        LengthOfSymbols.lenOfDownLetters    = 26;
+        LengthOfSymbols.lenOfUpLetters      = 26;
+        LengthOfSymbols.lenOfSymbols        = 33;
+        LengthOfSymbols.lenOfDigitals       = 10;
+    };
+    
+    bool checkLengthOfKey(){
+        if (storageKeys.secondLevelFirstVersion.length() != 60 ||
+            storageKeys.secondLevelSecondVersion.length()!= 60 ||
+            storageKeys.secondLevelThirdVersion.length() != 60 ||
+            storageKeys.firstLevelCode.size() != quantityAllSymbols
+            )
         {
-            for (size_t i = 0; i < 95; i++)
-            {
-                if ((i==26) || (i==52) || (i==85))
-                    fout << "\n";
-                fout << storageKeys.FirstEncryptionLevel[i];                    //write Alphabets first level
-            }
-            fout << "\n";
-        
-            fout << storageKeys.bufferFirst;        //write Alphabets second level
-            fout << "\n";
-            
-            fout << storageKeys.bufferSecond;        //write Alphabets second level
-            fout << "\n";
-            
-            fout << storageKeys.bufferThird;        //write Alphabets second level
-        
-            fout.close();
+            return false;
         }
-        else
-        {
-            std::cout << ". File opening error, check the correct path.[Read Alphabetsbase]" << '\n';
-            exit(1);
-        }
-        return 0;
+        return true;
+    }
+    
+    void generationCode()
+    {
+        GenerateFirstEncryptionCode();
+        GenerateSecondEncryptionCode();
     }
 };

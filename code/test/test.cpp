@@ -1,26 +1,50 @@
 #include <gtest/gtest.h>
 #include "../CryptodataCode/cmd/headers.h"
+#include "../GeneratorCode/pkg/Generate.cpp"
 
-namespace checkData
+struct InputData
 {
-  std::string pathForReadData ;
-  std::string pathForWriteData;
-  std::string pathForReadKey;
-  std::string data = "abcdefghijklmnopqrstuvwxyz ABCDEFGHIJKLMNOPQRSTUVWXYZ  .,:@!?;\"'()<>-[]{}#$^&+/\\|=~_%*` 0123456789";
-} 
+  std::string data;
+  InputData(){
+    for (size_t i = 32; i < 127; i++)
+    {
+      data.push_back(char(i));
+    }
+  }
+} inputData;
+
+std::string path        = "database.txt";
+std::string pathCrypto  = "../example/crypto.txt";
+std::string pathEncry   = "../example/encry.txt";
+std::string pathEncry1  = "../example/encry1.txt";
+std::string pathDecry   = "../example/decry.txt";
+std::string pathDecry1  = "../example/decry1.txt";
+
+void testGenerete()
+{
+  GenerateEnglishCode generateCode;   
+
+  std::cout << "Generating a key." << std::endl;
+  generateCode.generationCode();
+  
+  EXPECT_TRUE(generateCode.checkLengthOfKey());
+
+  EXPECT_TRUE(generateCode.WriteKeyToFile(path));  
+  std::cout << "Creating a file." << std::endl;
+}
 
 int test1(){
   InputArgs inputArgs;
-  inputArgs.pathToKey     = "/home/serpc/Projects/cpp/cryptodata/code/test/example/test.txt";
+  inputArgs.pathToKey     = path;
   inputArgs.cryptoAction  = COND::ENCRYPTION;
 
   std::cout << "TEST1.1 - encryption." << std::endl;
 
   CryptographyEnglish cryptography;
-  cryptography.write_to_cache(inputArgs.pathToKey);
+  EXPECT_TRUE(cryptography.writeToCache(inputArgs.pathToKey));
   EXPECT_TRUE(cryptography.checkCryptoKey());
 
-  cryptography.Setter(&checkData::data);
+  cryptography.Setter(&inputData.data);
   cryptography.encryption();
   EXPECT_TRUE(cryptography.checkSum(inputArgs.cryptoAction));
 
@@ -37,14 +61,14 @@ int test1(){
 
   std::string processingData1 = cryptography.GetterOT(); 
 
-  EXPECT_EQ(processingData1, checkData::data);
+  EXPECT_EQ(processingData1, inputData.data);
   return 0;
 }
 int test2(){
   InputArgs inputArgs;
-  inputArgs.pathToKey           = "/home/serpc/Projects/cpp/cryptodata/code/test/example/test.txt";
-  inputArgs.pathForReadToFile   = "/home/serpc/Projects/cpp/cryptodata/code/test/example/crypto.txt";
-  inputArgs.pathForWriteToFile  = "/home/serpc/Projects/cpp/cryptodata/code/test/example/encry.txt";
+  inputArgs.pathToKey           = path; 
+  inputArgs.pathForReadToFile   = pathCrypto;
+  inputArgs.pathForWriteToFile  = pathEncry;
   inputArgs.cryptoAction        = COND::ENCRYPTION;
   inputArgs.inputOfText         = COND::FILE_IO;
   inputArgs.displayedText       = COND::FILE_IO;
@@ -52,43 +76,42 @@ int test2(){
   std::cout << "TEST2.1 - encryption." << std::endl;
 
   CryptographyEnglish cryptography;
-  cryptography.write_to_cache(inputArgs.pathToKey);
+  EXPECT_TRUE(cryptography.writeToCache(inputArgs.pathToKey));
   EXPECT_TRUE(cryptography.checkCryptoKey());
 
-  ReadFromFile readFile = readFromFile(inputArgs.pathForReadToFile, inputArgs.cryptoAction);
-  EXPECT_EQ(readFile.codeError, 0);
+  ReadFromFile readFromFile = readFile(inputArgs.pathForReadToFile, inputArgs.cryptoAction);
+  EXPECT_EQ(readFromFile.codeError, 0);
 
-  cryptography.Setter(&readFile.inputText);
+  cryptography.Setter(&readFromFile.inputText);
   cryptography.encryption();
   EXPECT_TRUE(cryptography.checkSum(inputArgs.cryptoAction));
 
   std::string encryptionData = cryptography.GetterOT();
-  EXPECT_EQ(writeToFile(inputArgs.pathForWriteToFile, encryptionData), 0);
+  EXPECT_TRUE(writeToFile(inputArgs.pathForWriteToFile, encryptionData));
 
   std::cout << "TEST2.2 - decryprion." << std::endl;
 
-  inputArgs.pathForReadToFile   = "/home/serpc/Projects/cpp/cryptodata/code/test/example/encry.txt";
-  inputArgs.pathForWriteToFile  = "/home/serpc/Projects/cpp/cryptodata/code/test/example/decry.txt";
+  inputArgs.pathForReadToFile   = pathEncry;
+  inputArgs.pathForWriteToFile  = pathDecry;
   inputArgs.cryptoAction        = COND::DECRYPTION;
   cryptography.resettingTheValue();
 
-  readFile = readFromFile(inputArgs.pathForReadToFile, inputArgs.cryptoAction);
-  EXPECT_EQ(readFile.codeError, 0);
+  readFromFile = readFile(inputArgs.pathForReadToFile, inputArgs.cryptoAction);
+  EXPECT_EQ(readFromFile.codeError, 0);
 
-  cryptography.Setter(&readFile.inputText);
+  cryptography.Setter(&readFromFile.inputText);
   cryptography.decryption();
   EXPECT_TRUE(cryptography.checkSum(inputArgs.cryptoAction));
 
   encryptionData = cryptography.GetterOT();
-  EXPECT_EQ(writeToFile(inputArgs.pathForWriteToFile, encryptionData), 0);
+  EXPECT_TRUE(writeToFile(inputArgs.pathForWriteToFile, encryptionData));
 
   return 0;
 }
 int test3(){
   InputArgs inputArgs;
-  inputArgs.pathToKey           = "/home/serpc/Projects/cpp/cryptodata/code/test/example/test.txt";
-  inputArgs.pathForReadToFile   = "";
-  inputArgs.pathForWriteToFile  = "/home/serpc/Projects/cpp/cryptodata/code/test/example/encry1.txt";
+  inputArgs.pathToKey           = path;
+  inputArgs.pathForWriteToFile  = pathEncry1;
   inputArgs.cryptoAction        = COND::ENCRYPTION;
   inputArgs.inputOfText         = COND::CLI_IO;
   inputArgs.displayedText       = COND::FILE_IO;
@@ -96,29 +119,28 @@ int test3(){
   std::cout << "TEST3.1 - encryption." << std::endl;
 
   CryptographyEnglish cryptography;
-  cryptography.write_to_cache(inputArgs.pathToKey);
+  EXPECT_TRUE(cryptography.writeToCache(inputArgs.pathToKey));
   EXPECT_TRUE(cryptography.checkCryptoKey());
 
-  cryptography.Setter(&checkData::data);
+  cryptography.Setter(&inputData.data);
   cryptography.encryption();
   EXPECT_TRUE(cryptography.checkSum(inputArgs.cryptoAction));
 
   std::string encryptionData = cryptography.GetterOT();
-  EXPECT_EQ(writeToFile(inputArgs.pathForWriteToFile, encryptionData), 0);
+  EXPECT_TRUE(writeToFile(inputArgs.pathForWriteToFile, encryptionData));
 
   std::cout << "TEST3.2 - decryption." << std::endl;
 
-  inputArgs.pathForReadToFile   = "/home/serpc/Projects/cpp/cryptodata/code/test/example/encry1.txt";
-  inputArgs.pathForWriteToFile  = "";
+  inputArgs.pathForReadToFile   = pathEncry1;
   inputArgs.cryptoAction        = COND::DECRYPTION;
   inputArgs.inputOfText         = COND::FILE_IO;
   inputArgs.displayedText       = COND::CLI_IO;
   cryptography.resettingTheValue();
 
-  ReadFromFile readFile = readFromFile(inputArgs.pathForReadToFile, inputArgs.cryptoAction);
-  EXPECT_EQ(readFile.codeError, 0);
+  ReadFromFile readFromFile = readFile(inputArgs.pathForReadToFile, inputArgs.cryptoAction);
+  EXPECT_EQ(readFromFile.codeError, 0);
 
-  cryptography.Setter(&readFile.inputText);
+  cryptography.Setter(&readFromFile.inputText);
   cryptography.decryption();
   EXPECT_TRUE(cryptography.checkSum(inputArgs.cryptoAction));
 
@@ -127,16 +149,15 @@ int test3(){
 std::cout << "TEST3.3 - encryption." << std::endl;
 
   cryptography.resettingTheValue();
-  inputArgs.pathForReadToFile   = "/home/serpc/Projects/cpp/cryptodata/code/test/example/crypto.txt";
-  inputArgs.pathForWriteToFile  = "";
+  inputArgs.pathForReadToFile   = pathCrypto;
   inputArgs.cryptoAction        = COND::ENCRYPTION;
   inputArgs.inputOfText         = COND::FILE_IO;
   inputArgs.displayedText       = COND::CLI_IO;
 
-  readFile = readFromFile(inputArgs.pathForReadToFile, inputArgs.cryptoAction);
-  EXPECT_EQ(readFile.codeError, 0);
+  readFromFile = readFile(inputArgs.pathForReadToFile, inputArgs.cryptoAction);
+  EXPECT_EQ(readFromFile.codeError, 0);
 
-  cryptography.Setter(&readFile.inputText);
+  cryptography.Setter(&readFromFile.inputText);
   cryptography.encryption();
   EXPECT_TRUE(cryptography.checkSum(inputArgs.cryptoAction));
 
@@ -144,8 +165,7 @@ std::cout << "TEST3.3 - encryption." << std::endl;
 
   std::cout << "TEST3.4 - decryption." << std::endl;
 
-  inputArgs.pathForReadToFile   = "";
-  inputArgs.pathForWriteToFile  = "/home/serpc/Projects/cpp/cryptodata/code/test/example/decry1.txt";
+  inputArgs.pathForWriteToFile  = pathDecry1;
   inputArgs.cryptoAction        = COND::DECRYPTION;
   inputArgs.inputOfText         = COND::CLI_IO;
   inputArgs.displayedText       = COND::FILE_IO;
@@ -156,18 +176,18 @@ std::cout << "TEST3.3 - encryption." << std::endl;
   EXPECT_TRUE(cryptography.checkSum(inputArgs.cryptoAction));
 
   encryptionData = cryptography.GetterOT();
-  EXPECT_EQ(writeToFile(inputArgs.pathForWriteToFile, encryptionData), 0);
+  EXPECT_TRUE(writeToFile(inputArgs.pathForWriteToFile, encryptionData));
 
   return 0;
 }
 
 TEST(Test, BasicAssertions) 
 {
+  testGenerete();
   test1();
   test2();
   test3();
 }
-
 
 int main()
 {

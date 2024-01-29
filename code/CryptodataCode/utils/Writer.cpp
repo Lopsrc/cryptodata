@@ -4,47 +4,46 @@ struct ReadFromFile
     int codeError = 0;          // 0 (no error),or 1(error).
 };
 
-const std::string   keyw = "_N0_";                                              //line separator.
+const std::string   keyw = "_N0_";            //The key word. Means the data is being moved to a new line.                                  //line separator.
 
-ReadFromFile readFromFile(std::string& path, int cryptoAction)                      //read Alphabets from a file
+ReadFromFile readFile(std::string& path, int cryptoAction)                      
 {
-    ReadFromFile        readFromFileDTO;        //       local variables
-    std::string         txt2;       //  for storing temporary values.
-    std::ifstream       fin;        // create stream for reading Alphabets from a file.     
-    fin.open(path);          //open file
+    ReadFromFile        readFile; 
+    std::string         buffer;      
+    std::ifstream       fin;       
+    fin.open(path);          
     if(fin.is_open())
     {
-        if (cryptoAction==COND::ENCRYPTION)        //for encryption
+        if (cryptoAction==COND::ENCRYPTION)        
         {
             while (!(fin.eof()))
             {
-                std::getline(fin, txt2);        //get value
-                readFromFileDTO.inputText += txt2 ;         //write Alphabets from a file
-                readFromFileDTO.inputText += keyw;   //add keyword
+                std::getline(fin, buffer);        
+                readFile.inputText += buffer ;    
+                readFile.inputText += keyw;   
             }
         }
-        if (cryptoAction==COND::DECRYPTION)            //for encryption
+        if (cryptoAction==COND::DECRYPTION)   
         {
             while (!(fin.eof()))
             {
-                std::getline(fin,txt2);     //get value
-                readFromFileDTO.inputText += txt2;     //write Alphabets from a file
+                std::getline(fin,buffer);     
+                readFile.inputText += buffer; 
             }
         }
         fin.close();                    
     }
     else 
     {
-        std::cout << ". File opening error, check the correct path.[Read text]" << '\n';
-        readFromFileDTO.codeError = 1;
+        readFile.codeError = 1;
     }
-    return readFromFileDTO;
+    return readFile;
 }
 
-int writeToFile(std::string& path, std::string& outputText)                         //write Alphabets to file
+bool writeToFile(std::string& path, std::string& outputText)
 {
     int            size  =  outputText.length();   
-    std::ofstream  fout;                // create stream for write Alphabets to file. 
+    std::ofstream  fout;               
     fout.open(path);
     if(fout.is_open())
     {
@@ -55,16 +54,15 @@ int writeToFile(std::string& path, std::string& outputText)                     
                 i+=3;
                 continue;
             }
-            fout << outputText[i]; //write Alphabets to file
+            fout << outputText[i]; 
         }
         fout.close();
     }
     else
     {
-        std::cout << ". File opening error, check the correct path.[Output text]" << '\n';
-        return 1;
+        return false;
     }
-    return 0;
+    return true;
 }
 void printResult(std::string& outputText)                           //output text in terminal
 {
