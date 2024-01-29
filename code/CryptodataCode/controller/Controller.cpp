@@ -11,15 +11,23 @@ struct InputArgs
 
 InputArgs processingArgs(int argc, char** argv){
     InputArgs inputArgs;
-    if (argc==1 || (argc==2 && argv[1]!="-h"))        
+    if (argc==1)        
     {
         printErr(argv[0]);
         exit(1);
     }
     else if (argc==2)
     {
-        printh();
-        exit(1);
+        if (std::string(argv[1])=="-h")
+        {
+            printh();
+            exit(1);
+        }
+        else
+        {
+            printErr(argv[0]);
+            exit(1);
+        }
     }
     else if (argc >= 3)
     {
