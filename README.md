@@ -22,7 +22,7 @@ Testing the code:
 
 To run the code, go to the /app/build directory and run 2 commands. The first command creates a key that is used for encryption. The second command encrypts the data:
 ```
-cd app/build
+cd /app/build
 ./generate database.txt
 ./cryptodata database.txt -e 
 ```
